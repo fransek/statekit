@@ -3,3 +3,4 @@ export * from "./lib/createStoreContext";
 export * from "./lib/useStore";
 export * from "./lib/useStoreContext";
 export * from "./lib/createPersistentStore";
+export * from "./lib/createFormController";

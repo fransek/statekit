@@ -37,8 +37,8 @@ export type StateModifier<TState extends object> =
   | ((state: TState) => Partial<TState>);
 
 export type DefineActions<TState extends object, TActions> = (
-  set: (stateModifier: StateModifier<TState>) => TState,
-  get: () => TState,
+  set: SetState<TState>,
+  get: GetState<TState>,
 ) => TActions;
 
 export type StoreOptions<TState extends object> = {
