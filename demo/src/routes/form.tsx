@@ -1,16 +1,11 @@
-import {
-  Constraint,
-  createFormController,
-  useStore,
-  Validator,
-} from "@fransek/statekit";
+import { createFormController, useStore, Validator } from "@fransek/statekit";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/form")({
   component: RouteComponent,
 });
 
-const required: Validator<string> = (value) => {
+const required: Validator<unknown> = (value) => {
   if (!value) {
     return "Required field";
   }
@@ -22,30 +17,27 @@ const validateEmail: Validator<string> = (value) => {
   }
 };
 
-const maxLength: Constraint<string> = (value) => {
-  if (value.length > 10) {
-    return false;
+const nameFirst: Validator<string> = (value) => {
+  if (value && !form.get().name.value) {
+    return "Enter your name first";
   }
-  return true;
 };
 
 const form = createFormController({
   name: {
     initialValue: "",
     validators: [required],
-    constraints: [maxLength],
   },
   email: {
     initialValue: "",
-    validators: [required, validateEmail],
-    constraints: [maxLength],
+    validators: [nameFirst, required, validateEmail],
   },
 });
 
 function RouteComponent() {
   const {
     state: { email, name },
-    actions,
+    actions: { setValue, validate },
   } = useStore(form);
 
   return (
@@ -56,7 +48,7 @@ function RouteComponent() {
         <input
           className="border-2 rounded p-1 mr-2"
           value={name.value}
-          onChange={(e) => actions.name.setValue(e.target.value)}
+          onChange={(e) => setValue.name(e.target.value)}
         />
         {name.error && <div className="text-red-600">{name.error}</div>}
       </label>
@@ -66,14 +58,15 @@ function RouteComponent() {
         <input
           className="border-2 rounded p-1 mr-2"
           value={email.value}
-          onChange={(e) => actions.email.setValue(e.target.value)}
+          onChange={(e) => setValue.email(e.target.value)}
         />
         {email.error && <div className="text-red-600">{email.error}</div>}
       </label>
       <button
         onClick={(e) => {
           e.preventDefault();
-          actions.validate();
+          const { isValid, form } = validate();
+          console.log(isValid, form);
         }}
       >
         Submit

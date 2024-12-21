@@ -1,141 +1,114 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createStore, GetState, SetState } from "./createStore";
+import { createStore } from "./createStore";
 
-export type Validator<T> = (value: T) => string | undefined;
+type FormControllerSchema = Record<string, FieldController<unknown>>;
 
-export type Constraint<T> = (value: T) => boolean;
+export type FormController<T extends FormControllerSchema> = {
+  [K in keyof T]: FieldController<T[K]["initialValue"]>;
+};
+
+export type FormState<T extends FormController<T>> = {
+  [K in keyof T]: {
+    value: T[K]["initialValue"];
+    error: string | undefined;
+  };
+};
 
 export type FieldController<T> = {
   initialValue: T;
   validators?: Validator<T>[];
-  constraints?: Constraint<T>[];
 };
 
-export type FormController = {
-  [key: string]: FieldController<any>;
-};
-
-export type Field<T> = {
-  value: T;
-  error: string | undefined;
-  touched: boolean;
-};
-
-export type Form<T extends FormController> = {
-  [K in keyof T]: Field<T[K]["initialValue"]>;
-};
-
-export type FormActions<T extends FormController> = {
-  [K in keyof T]: {
-    setValue: (value: Form<T>[K]["value"]) => Form<T>;
+export type FormActions<T extends FormController<T>> = {
+  setValue: {
+    [K in keyof T]: (value: T[K]["initialValue"]) => FormState<T>;
   };
-} & {
-  validate: () => ValidationResult<T>;
+  validate: () => FormValidationResult<T>;
 };
 
-export const createFormController = <T extends FormController>(
+type FormValidationResult<T extends FormController<T>> = {
+  isValid: boolean;
+  form: FormState<T>;
+};
+
+export type Validator<T> = (value: T) => string | void;
+
+export const createFormController = <T extends FormController<T>>(
   formController: T,
 ) => {
-  const state = createForm(formController);
-  const defineActions = (set: SetState<Form<T>>, get: GetState<Form<T>>) =>
-    createActions(formController, state, set, get);
-  const store = createStore(state, defineActions);
-  return store;
-};
+  const state = {} as FormState<T>;
 
-const createForm = <T extends FormController>(form: T): Form<T> => {
-  return Object.keys(form).reduce((acc, key: keyof T) => {
-    acc[key] = {
-      value: form[key].initialValue,
+  for (const key in formController) {
+    state[key] = {
+      value: formController[key].initialValue,
       error: undefined,
-      touched: false,
     };
-    return acc;
-  }, {} as Form<T>);
+  }
+
+  return createStore(state, (set, get) => {
+    const actions = {
+      setValue: {},
+      validate: () => {
+        const result = validateForm(get(), formController);
+        set(result.form);
+        return result;
+      },
+    } as FormActions<T>;
+
+    for (const key in formController) {
+      actions.setValue[key] = (value) => {
+        const error = validateField(value, formController[key].validators);
+
+        return set((state) => ({
+          ...state,
+          [key]: {
+            ...state[key],
+            error,
+            value,
+          },
+        }));
+      };
+    }
+
+    return actions;
+  });
 };
 
-const createActions = <T extends FormController>(
-  controller: T,
-  initialState: Form<T>,
-  set: SetState<Form<T>>,
-  get: GetState<Form<T>>,
-) => {
-  const fieldActions = Object.keys(initialState).reduce((acc, key: keyof T) => {
-    return {
-      ...acc,
-      [key]: {
-        setValue: (value: Form<T>[typeof key]["value"]) => {
-          if (
-            controller[key].constraints?.some(
-              (constraint) => !constraint(value),
-            )
-          ) {
-            return get();
-          }
-          const error = validateField(value, controller[key].validators);
-          return set((state) => ({
-            ...state,
-            [key]: {
-              ...state[key],
-              error,
-              value,
-              touched: true,
-            } as Form<T>[typeof key],
-          }));
-        },
-      } as FormActions<T>[typeof key],
-    };
-  }, {} as FormActions<T>);
-
-  return {
-    ...fieldActions,
-    validate: () => {
-      const validationResult = validateForm(get(), controller);
-      set(validationResult.state);
-      return validationResult;
-    },
-  };
-};
-
-const validateField = <T>(
-  value: T,
-  validators?: Validator<T>[],
-): string | undefined => {
+const validateField = <T>(value: T, validators?: Validator<T>[]) => {
   if (!validators) {
-    return undefined;
+    return;
   }
   for (const validator of validators) {
     const error = validator(value);
+
     if (error) {
       return error;
     }
   }
-  return undefined;
 };
 
-export type ValidationResult<T extends FormController> = {
-  state: Form<T>;
-  isValid: boolean;
-};
-
-const validateForm = <T extends FormController>(
-  form: Form<T>,
-  controller: T,
-): ValidationResult<T> => {
+const validateForm = <T extends FormController<T>>(
+  form: FormState<T>,
+  formController: T,
+): FormValidationResult<T> => {
+  const newForm = { ...form };
   let isValid = true;
-  const newFormState = Object.keys(form).reduce((acc, key: keyof T) => {
-    const error = validateField(form[key].value, controller[key].validators);
+
+  for (const key in formController) {
+    const error = validateField(
+      form[key].value,
+      formController[key].validators,
+    );
     if (error) {
       isValid = false;
     }
-    acc[key] = {
-      ...form[key],
+    newForm[key] = {
+      value: form[key].value,
       error,
     };
-    return acc;
-  }, {} as Form<T>);
+  }
+
   return {
-    state: newFormState,
     isValid,
+    form: newForm,
   };
 };
