@@ -1,3 +1,4 @@
+import path from "path";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -8,6 +9,9 @@ export default defineConfig({
       include: ["src/**/*.ts"],
       exclude: ["src/index.ts", "src/**/*.test.ts"],
       reporter: ["text", "json", "html"],
+    },
+    alias: {
+      react: path.resolve(__dirname, "node_modules/react"),
     },
   },
 });
