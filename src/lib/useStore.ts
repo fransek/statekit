@@ -1,8 +1,12 @@
 import { useSyncExternalStore } from "react";
 import { StateModifier, Store } from "./createStore";
 
-export type BoundStore<TState extends object, TActions extends object> = {
-  state: TState;
+export type BoundStore<
+  TState extends object,
+  TActions extends object,
+  TSelection = null,
+> = {
+  state: TSelection extends null ? TState : TSelection;
   actions: TActions;
   set: (stateModifier: StateModifier<TState>) => TState;
 };
@@ -33,12 +37,19 @@ export type BoundStore<TState extends object, TActions extends object> = {
  *   );
  * }
  */
-export const useStore = <TState extends object, TActions extends object>({
-  get,
-  set,
-  subscribe,
-  actions,
-}: Store<TState, TActions>): BoundStore<TState, TActions> => {
-  const state = useSyncExternalStore(subscribe, get, get);
+export const useStore = <
+  TState extends object,
+  TActions extends object,
+  TSelection = null,
+>(
+  { get, set, subscribe, actions }: Store<TState, TActions>,
+  select?: (state: TState) => TSelection,
+): BoundStore<TState, TActions, TSelection> => {
+  const getState = () => (select ? select(get()) : get());
+  const state = useSyncExternalStore(
+    subscribe,
+    getState,
+    getState,
+  ) as TSelection extends null ? TState : TSelection;
   return { state, actions, set };
 };
