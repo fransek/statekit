@@ -36,6 +36,9 @@ function RootComponent() {
         <Link to="/persistent" activeProps={activeProps}>
           Counter with persistent state
         </Link>
+        <Link to="/global" activeProps={activeProps}>
+          Global store
+        </Link>
       </div>
       <main className="p-4">
         <Outlet />

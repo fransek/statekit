@@ -32,14 +32,16 @@ export const useStoreContext = <
   TArgs extends unknown[],
   TState extends object,
   TActions extends object,
+  TSelection = null,
 >(
   storeContext: StoreContext<TArgs, TState, TActions>,
-): BoundStore<TState, TActions> => {
+  select?: (state: TState) => TSelection,
+): BoundStore<TState, TActions, TSelection> => {
   const store = useContext(storeContext);
   if (!store) {
     throw new Error(
       "Store context not found. Make sure you are using the store context within a provider.",
     );
   }
-  return useStore(store);
+  return useStore(store, select);
 };

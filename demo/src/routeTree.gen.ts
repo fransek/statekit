@@ -13,6 +13,7 @@
 import { Route as rootRoute } from "./routes/__root";
 import { Route as TodoImport } from "./routes/todo";
 import { Route as PersistentImport } from "./routes/persistent";
+import { Route as GlobalImport } from "./routes/global";
 import { Route as CounterImport } from "./routes/counter";
 import { Route as ContextImport } from "./routes/context";
 import { Route as AsyncImport } from "./routes/async";
@@ -29,6 +30,12 @@ const TodoRoute = TodoImport.update({
 const PersistentRoute = PersistentImport.update({
   id: "/persistent",
   path: "/persistent",
+  getParentRoute: () => rootRoute,
+} as any);
+
+const GlobalRoute = GlobalImport.update({
+  id: "/global",
+  path: "/global",
   getParentRoute: () => rootRoute,
 } as any);
 
@@ -88,6 +95,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof CounterImport;
       parentRoute: typeof rootRoute;
     };
+    "/global": {
+      id: "/global";
+      path: "/global";
+      fullPath: "/global";
+      preLoaderRoute: typeof GlobalImport;
+      parentRoute: typeof rootRoute;
+    };
     "/persistent": {
       id: "/persistent";
       path: "/persistent";
@@ -112,6 +126,7 @@ export interface FileRoutesByFullPath {
   "/async": typeof AsyncRoute;
   "/context": typeof ContextRoute;
   "/counter": typeof CounterRoute;
+  "/global": typeof GlobalRoute;
   "/persistent": typeof PersistentRoute;
   "/todo": typeof TodoRoute;
 }
@@ -121,6 +136,7 @@ export interface FileRoutesByTo {
   "/async": typeof AsyncRoute;
   "/context": typeof ContextRoute;
   "/counter": typeof CounterRoute;
+  "/global": typeof GlobalRoute;
   "/persistent": typeof PersistentRoute;
   "/todo": typeof TodoRoute;
 }
@@ -131,21 +147,37 @@ export interface FileRoutesById {
   "/async": typeof AsyncRoute;
   "/context": typeof ContextRoute;
   "/counter": typeof CounterRoute;
+  "/global": typeof GlobalRoute;
   "/persistent": typeof PersistentRoute;
   "/todo": typeof TodoRoute;
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/async" | "/context" | "/counter" | "/persistent" | "/todo";
+  fullPaths:
+    | "/"
+    | "/async"
+    | "/context"
+    | "/counter"
+    | "/global"
+    | "/persistent"
+    | "/todo";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/async" | "/context" | "/counter" | "/persistent" | "/todo";
+  to:
+    | "/"
+    | "/async"
+    | "/context"
+    | "/counter"
+    | "/global"
+    | "/persistent"
+    | "/todo";
   id:
     | "__root__"
     | "/"
     | "/async"
     | "/context"
     | "/counter"
+    | "/global"
     | "/persistent"
     | "/todo";
   fileRoutesById: FileRoutesById;
@@ -156,6 +188,7 @@ export interface RootRouteChildren {
   AsyncRoute: typeof AsyncRoute;
   ContextRoute: typeof ContextRoute;
   CounterRoute: typeof CounterRoute;
+  GlobalRoute: typeof GlobalRoute;
   PersistentRoute: typeof PersistentRoute;
   TodoRoute: typeof TodoRoute;
 }
@@ -165,6 +198,7 @@ const rootRouteChildren: RootRouteChildren = {
   AsyncRoute: AsyncRoute,
   ContextRoute: ContextRoute,
   CounterRoute: CounterRoute,
+  GlobalRoute: GlobalRoute,
   PersistentRoute: PersistentRoute,
   TodoRoute: TodoRoute,
 };
@@ -183,6 +217,7 @@ export const routeTree = rootRoute
         "/async",
         "/context",
         "/counter",
+        "/global",
         "/persistent",
         "/todo"
       ]
@@ -198,6 +233,9 @@ export const routeTree = rootRoute
     },
     "/counter": {
       "filePath": "counter.tsx"
+    },
+    "/global": {
+      "filePath": "global.tsx"
     },
     "/persistent": {
       "filePath": "persistent.tsx"
