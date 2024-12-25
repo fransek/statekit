@@ -4,9 +4,9 @@ import { StateModifier, Store } from "./createStore";
 export type BoundStore<
   TState extends object,
   TActions extends object,
-  TSelection = null,
+  TSelection = TState,
 > = {
-  state: TSelection extends null ? TState : TSelection;
+  state: TSelection;
   actions: TActions;
   set: (stateModifier: StateModifier<TState>) => TState;
 };
@@ -40,7 +40,7 @@ export type BoundStore<
 export const useStore = <
   TState extends object,
   TActions extends object,
-  TSelection = null,
+  TSelection = TState,
 >(
   { get, set, subscribe, actions }: Store<TState, TActions>,
   select?: (state: TState) => TSelection,
@@ -50,6 +50,6 @@ export const useStore = <
     subscribe,
     getState,
     getState,
-  ) as TSelection extends null ? TState : TSelection;
+  ) as TSelection;
   return { state, actions, set };
 };

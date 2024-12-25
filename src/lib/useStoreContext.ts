@@ -32,7 +32,7 @@ export const useStoreContext = <
   TArgs extends unknown[],
   TState extends object,
   TActions extends object,
-  TSelection = null,
+  TSelection = TState,
 >(
   storeContext: StoreContext<TArgs, TState, TActions>,
   select?: (state: TState) => TSelection,
