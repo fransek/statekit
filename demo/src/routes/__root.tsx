@@ -34,7 +34,7 @@ function RootComponent() {
 
   return (
     <div className="flex">
-      <div className="flex flex-col gap-2 text-lg border-r min-h-screen p-4">
+      <nav className="flex flex-col gap-2 text-lg border-r min-h-screen p-4">
         <Link
           to="/"
           className="font-bold"
@@ -48,13 +48,18 @@ function RootComponent() {
             {title}
           </Link>
         ))}
+      </nav>
+      <div className="w-full">
+        <header className="p-4 w-full">
+          <h1 className="font-bold text-lg">
+            {routes.find(({ path }) => path === pathname)?.title || "Demo"}
+          </h1>
+        </header>
+        <hr />
+        <main className="p-4 w-full">
+          <Outlet />
+        </main>
       </div>
-      <main className="p-4">
-        <h1 className="font-bold text-lg mb-4">
-          {routes.find(({ path }) => path === pathname)?.title}
-        </h1>
-        <Outlet />
-      </main>
       <TanStackRouterDevtools position="bottom-right" />
     </div>
   );
