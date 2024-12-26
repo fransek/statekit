@@ -5,7 +5,12 @@ import { BoundStore, useStore } from "./useStore";
 /**
  * A hook used to access a store context created with `createStoreContext`.
  *
+ * **Note:** If the `select` function is provided, an equality check is performed. This has some caveats:
+ * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
+ * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
+ *
  * @param {StoreContext<TArgs, TState, TActions>} storeContext - The context of the store.
+ * @param {(state: TState) => TSelection} [select] - A function to select a subset of the state. Can prevent unnecessary re-renders.
  * @returns {BoundStore<TState, TActions>} The store instance.
  *
  * @example
@@ -27,6 +32,11 @@ import { BoundStore, useStore } from "./useStore";
  *     </div>
  *   );
  * }
+ *
+ * @example
+ * const {
+ *   state: { count },
+ * } = useStoreContext(GlobalStoreContext, (state) => state.counter);
  */
 export const useStoreContext = <
   TArgs extends unknown[],

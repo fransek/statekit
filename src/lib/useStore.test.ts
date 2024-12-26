@@ -47,4 +47,17 @@ describe("useStore", () => {
 
     expect(result.current.state).toStrictEqual({ count: 1 });
   });
+
+  it("should return the selected state", () => {
+    const { result } = renderHook(() =>
+      useStore(store, (state) => state.count),
+    );
+    expect(result.current.state).toStrictEqual(0);
+
+    act(() => {
+      result.current.actions.increment();
+    });
+
+    expect(result.current.state).toStrictEqual(1);
+  });
 });
