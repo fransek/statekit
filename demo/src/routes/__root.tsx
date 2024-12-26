@@ -1,14 +1,36 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import {
+  Link,
+  Outlet,
+  createRootRoute,
+  useLocation,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { FileRouteTypes } from "../routeTree.gen";
 
 export const Route = createRootRoute({
   component: RootComponent,
 });
 
+const routes: {
+  path: FileRouteTypes["to"];
+  title: string;
+}[] = [
+  { path: "/counter", title: "Counter" },
+  { path: "/context", title: "Counter with context" },
+  { path: "/persistent", title: "Counter with persistent state" },
+  { path: "/todo", title: "Todo app" },
+  { path: "/async", title: "Async" },
+  { path: "/global", title: "Global store" },
+];
+
 function RootComponent() {
   const activeProps = {
     className: "text-blue-500",
   };
+
+  const pathname = useLocation({
+    select: (location) => location.pathname,
+  });
 
   return (
     <div className="flex">
@@ -21,26 +43,16 @@ function RootComponent() {
         >
           <h1>Demo</h1>
         </Link>
-        <Link to="/counter" activeProps={activeProps}>
-          Counter
-        </Link>
-        <Link to="/context" activeProps={activeProps}>
-          Counter with context
-        </Link>
-        <Link to="/todo" activeProps={activeProps}>
-          Todo app
-        </Link>
-        <Link to="/async" activeProps={activeProps}>
-          Async
-        </Link>
-        <Link to="/persistent" activeProps={activeProps}>
-          Counter with persistent state
-        </Link>
-        <Link to="/global" activeProps={activeProps}>
-          Global store
-        </Link>
+        {routes.map(({ path, title }) => (
+          <Link key={path} to={path} activeProps={activeProps}>
+            {title}
+          </Link>
+        ))}
       </div>
       <main className="p-4">
+        <h1 className="font-bold text-lg mb-4">
+          {routes.find(({ path }) => path === pathname)?.title}
+        </h1>
         <Outlet />
       </main>
       <TanStackRouterDevtools position="bottom-right" />
