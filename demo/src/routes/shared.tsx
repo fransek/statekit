@@ -94,7 +94,9 @@ const Counter = () => {
         <div aria-label="count">{count}</div>
         <button onClick={countActions.increment}>+</button>
       </div>
-      <div>Render count: {++counterRenderCount}</div>
+      <div data-testid="counterRenderCount">
+        Render count: {++counterRenderCount}
+      </div>
     </div>
   );
 };
@@ -139,7 +141,7 @@ const Todo = () => {
           ))}
         </ul>
       )}
-      <span>Render count: {++todoRenderCount}</span>
+      <div data-testid="todoRenderCount">Render count: {++todoRenderCount}</div>
     </div>
   );
 };
