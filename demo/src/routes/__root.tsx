@@ -20,7 +20,7 @@ const routes: {
   { path: "/persistent", title: "Counter with persistent state" },
   { path: "/todo", title: "Todo app" },
   { path: "/async", title: "Async" },
-  { path: "/global", title: "Global store" },
+  { path: "/shared", title: "Shared store" },
 ];
 
 function RootComponent() {
