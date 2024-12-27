@@ -53,6 +53,27 @@ test("Async", async ({ page }) => {
   await expect(loadingText).not.toBeVisible();
 });
 
+test("Shared store", async ({ page }) => {
+  const counterRenderCount = page.getByTestId("counterRenderCount");
+  const todoRenderCount = page.getByTestId("todoRenderCount");
+  const increaseButton = page.getByRole("button", { name: "+" });
+  const todoInput = page.getByLabel("Add a new todo");
+  const addTodoButton = page.getByRole("button", { name: "Add" });
+
+  await page.goto("/shared");
+  await expect(counterRenderCount).toHaveText("Render count: 1");
+  await expect(todoRenderCount).toHaveText("Render count: 1");
+
+  await increaseButton.click();
+  await expect(counterRenderCount).toHaveText("Render count: 2");
+  await expect(todoRenderCount).toHaveText("Render count: 1");
+
+  await todoInput.fill("foo");
+  await addTodoButton.click();
+  await expect(counterRenderCount).toHaveText("Render count: 2");
+  await expect(todoRenderCount).toHaveText("Render count: 3");
+});
+
 const mockPosts = async (
   page: Page,
   json: {

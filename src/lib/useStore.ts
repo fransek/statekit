@@ -1,8 +1,13 @@
-import { useSyncExternalStore } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { StateModifier, Store } from "./createStore";
+import { deeplyEquals } from "./deeplyEquals";
 
-export type BoundStore<TState extends object, TActions extends object> = {
-  state: TState;
+export type BoundStore<
+  TState extends object,
+  TActions extends object,
+  TSelection = TState,
+> = {
+  state: TSelection;
   actions: TActions;
   set: (stateModifier: StateModifier<TState>) => TState;
 };
@@ -10,8 +15,13 @@ export type BoundStore<TState extends object, TActions extends object> = {
 /**
  * A hook used to access a store created with `createStore` and bind it to a component.
  *
- * @param {Store<TState, TActions>} store - The store created with `createStore`.
- * @returns {BoundStore<TState, TActions>} An object containing the current state, actions, and set function.
+ * **Note:** If the `select` function is provided, an equality check is performed. This has some caveats:
+ * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
+ * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
+ *
+ * @param {Store<TState, TActions, TSelection>} store - The store created with `createStore`.
+ * @param {(state: TState) => TSelection} [select] - A function to select a subset of the state. Can prevent unnecessary re-renders.
+ * @returns {BoundStore<TState, TSelection>} An object containing the current state, actions, and set function.
  *
  * @example
  * import { useStore } from "@fransek/statekit";
@@ -32,13 +42,41 @@ export type BoundStore<TState extends object, TActions extends object> = {
  *     </div>
  *   );
  * }
+ *
+ * @example
+ * const {
+ *   state: { count },
+ * } = useStore(globalStore, (state) => state.counter);
  */
-export const useStore = <TState extends object, TActions extends object>({
-  get,
-  set,
-  subscribe,
-  actions,
-}: Store<TState, TActions>): BoundStore<TState, TActions> => {
-  const state = useSyncExternalStore(subscribe, get, get);
+export const useStore = <
+  TState extends object,
+  TActions extends object,
+  TSelection = TState,
+>(
+  { get, set, subscribe, actions }: Store<TState, TActions>,
+  select?: (state: TState) => TSelection,
+): BoundStore<TState, TActions, TSelection> => {
+  const latestSnapshotRef = useRef<TSelection | TState | null>(null);
+
+  const getState = () => {
+    if (select) {
+      const newState = select(get());
+      if (
+        !latestSnapshotRef.current ||
+        !deeplyEquals(latestSnapshotRef.current, newState)
+      ) {
+        latestSnapshotRef.current = newState;
+      }
+      return latestSnapshotRef.current;
+    }
+    return get();
+  };
+
+  const state = useSyncExternalStore(
+    subscribe,
+    getState,
+    getState,
+  ) as TSelection;
+
   return { state, actions, set };
 };

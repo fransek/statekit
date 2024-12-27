@@ -5,36 +5,6 @@ export const Route = createFileRoute("/async")({
   component: RouteComponent,
 });
 
-function RouteComponent() {
-  const {
-    state: { posts, loading },
-    actions: { refresh },
-  } = useStore(store);
-
-  return (
-    <div>
-      <button onClick={refresh}>Refresh</button>
-      <div className="flex flex-col gap-4 mt-4 max-w-[500px]">
-        {loading ? (
-          <div>Fetching posts...</div>
-        ) : (
-          posts.map((post, index) => (
-            <div key={post.id} className="border p-4 rounded w-full">
-              <h3
-                className="font-bold mb-2"
-                data-testid={`post-${index}-title`}
-              >
-                {post.title}
-              </h3>
-              <p>{post.body}</p>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-}
-
 interface Post {
   userId: number;
   id: number;
@@ -71,3 +41,33 @@ const store = createStore(
     },
   },
 );
+
+function RouteComponent() {
+  const {
+    state: { posts, loading },
+    actions: { refresh },
+  } = useStore(store);
+
+  return (
+    <div>
+      <button onClick={refresh}>Refresh</button>
+      <div className="flex flex-col gap-4 mt-4 max-w-[500px]">
+        {loading ? (
+          <div>Fetching posts...</div>
+        ) : (
+          posts.map((post, index) => (
+            <div key={post.id} className="border p-4 rounded w-full">
+              <h3
+                className="font-bold mb-2"
+                data-testid={`post-${index}-title`}
+              >
+                {post.title}
+              </h3>
+              <p>{post.body}</p>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}

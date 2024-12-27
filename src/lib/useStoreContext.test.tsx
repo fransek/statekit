@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import React, { useRef } from "react";
 import { describe, expect, it } from "vitest";
 import { createStore } from "./createStore";
@@ -14,8 +14,10 @@ describe("useStoreContext", () => {
     })),
   );
 
-  const renderUseStoreContext = () =>
-    renderHook(() => useStoreContext(StoreContext), {
+  const renderUseStoreContext = <T,>(
+    select?: (state: { count: number }) => T,
+  ) =>
+    renderHook(() => useStoreContext(StoreContext, select), {
       wrapper: ({ children }) => {
         const store = useRef(StoreContext.instantiate(0)).current;
         return (
@@ -43,5 +45,16 @@ describe("useStoreContext", () => {
       },
       set: expect.any(Function),
     });
+  });
+
+  it("should return the selected state", () => {
+    const { result } = renderUseStoreContext((state) => state.count);
+    expect(result.current.state).toStrictEqual(0);
+
+    act(() => {
+      result.current.actions.increment();
+    });
+
+    expect(result.current.state).toStrictEqual(1);
   });
 });
