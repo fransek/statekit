@@ -34,7 +34,8 @@
     "demo:build": "cd demo && pnpm install && pnpm build",
     "demo:start": "cd demo && pnpm run start",
     "lint": "eslint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "publish": "tsx scripts/publish.ts"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
@@ -56,6 +57,7 @@
     "prettier": "^3.4.2",
     "react": "^19.0.0",
     "superjson": "^2.2.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   },
