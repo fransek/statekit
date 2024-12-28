@@ -1,7 +1,7 @@
 name: Publish Package to npmjs
 on:
   release:
-    types: [published]
+    types: [published, prereleased]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,6 +22,6 @@ jobs:
       - name: Build
         run: pnpm build
       - name: Publish
-        run: pnpm publish --provenance --access public --no-git-checks
+        run: pnpm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
