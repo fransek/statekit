@@ -18,14 +18,14 @@ const routes: {
   { path: "/", title: "Basic counter" },
   { path: "/context", title: "Counter + context" },
   { path: "/persistent", title: "Counter + persistent state" },
-  { path: "/todo", title: "Todo app" },
+  { path: "/todo", title: "To do app" },
   { path: "/async", title: "Async actions" },
   { path: "/shared", title: "Shared store" },
 ];
 
 function RootComponent() {
   const activeProps = {
-    className: "text-blue-500",
+    className: "text-sky-500",
   };
 
   const pathname = useLocation({
@@ -48,7 +48,7 @@ function RootComponent() {
           </h1>
         </header>
         <hr />
-        <main className="p-4 w-full">
+        <main className="p-4 flex flex-col gap-4 items-start">
           <Outlet />
         </main>
       </div>

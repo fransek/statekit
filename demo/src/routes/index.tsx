@@ -19,7 +19,7 @@ function RouteComponent() {
   } = useStore(store);
 
   return (
-    <div className="flex gap-4 items-center">
+    <div className="grid grid-cols-3 text-center items-center">
       <button onClick={decrement}>-</button>
       <div aria-label="count">{count}</div>
       <button onClick={increment}>+</button>

@@ -49,9 +49,9 @@ function RouteComponent() {
   } = useStore(store);
 
   return (
-    <div>
+    <>
       <button onClick={refresh}>Refresh</button>
-      <div className="flex flex-col gap-4 mt-4 max-w-[500px]">
+      <div className="flex flex-col gap-4 max-w-[500px]">
         {loading ? (
           <div>Fetching posts...</div>
         ) : (
@@ -68,6 +68,6 @@ function RouteComponent() {
           ))
         )}
       </div>
-    </div>
+    </>
   );
 }
