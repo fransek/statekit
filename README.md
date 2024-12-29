@@ -52,3 +52,5 @@ function Counter() {
   );
 }
 ```
+
+[Read the API reference](https://fransek.github.io/statekit/modules.html) for more information.

@@ -36,7 +36,8 @@
     "lint": "eslint",
     "prepare": "husky",
     "publish": "tsx scripts/publish.ts",
-    "doc": "typedoc"
+    "doc": "typedoc",
+    "doc:watch": "typedoc --watch"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",

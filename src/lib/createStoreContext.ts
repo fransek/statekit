@@ -1,11 +1,11 @@
-import { Context, createContext } from "react";
+import { createContext } from "react";
 import { Store } from "./createStore";
 
 export type StoreContext<
   TArgs extends unknown[],
   TState extends object,
   TActions extends object,
-> = Context<Store<TState, TActions> | null> & {
+> = React.Context<Store<TState, TActions> | null> & {
   /** Returns a new instance of the store. */
   instantiate: (...args: TArgs) => Store<TState, TActions>;
 };
@@ -18,6 +18,7 @@ export type StoreContext<
  * @returns A store context object with the given instantiation function.
  *
  * @example
+ * ```tsx
  * import { createStore, createStoreContext } from "@fransek/statekit";
  * import { useMemo } from "react";
  *
@@ -45,6 +46,7 @@ export type StoreContext<
  *     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
  *   );
  * }
+ * ```
  */
 export const createStoreContext = <
   TArgs extends unknown[],
