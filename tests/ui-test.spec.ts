@@ -1,7 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 
 test("Basic counter", async ({ page }) => {
-  const count = page.getByLabel("count", { exact: true });
+  const count = page.getByLabel("count");
 
   await page.goto("/");
   await page.getByRole("button", { name: "+" }).click();
@@ -14,13 +14,23 @@ test("Basic counter", async ({ page }) => {
 });
 
 test("Counter + context", async ({ page }) => {
-  const count = page.getByLabel("count", { exact: true });
+  const count = page.getByLabel("count");
 
   await page.goto("/context");
   await page.getByRole("button", { name: "+" }).click();
   await expect(count).toHaveText("1");
   await page.getByRole("button", { name: "Reset" }).click();
   await expect(count).toHaveText("0");
+});
+
+test("Counter + persistent state", async ({ page }) => {
+  const count = page.getByLabel("count");
+
+  await page.goto("/persistent");
+  await page.getByRole("button", { name: "+" }).click();
+  await expect(count).toHaveText("1");
+  await page.reload();
+  await expect(count).toHaveText("1");
 });
 
 test("To do app", async ({ page }) => {
