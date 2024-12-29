@@ -1,6 +1,14 @@
 # Statekit
 
+[![Version](https://img.shields.io/npm/v/@fransek/statekit)](https://npmjs.com/package/@fransek/statekit)
+[![Downloads](https://img.shields.io/npm/dm/@fransek/statekit.svg)](https://npmjs.com/package/@fransek/statekit)
+[![Minzipped size](https://img.shields.io/bundlephobia/minzip/@fransek/statekit)](https://bundlephobia.com/package/@fransek/statekit)
+
 A tiny state management library for React.
+
+- Simple
+- Lightweight
+- First-class TypeScript support
 
 ## Getting started
 
