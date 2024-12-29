@@ -3,7 +3,7 @@ import { test, expect, Page } from "@playwright/test";
 test("Counter", async ({ page }) => {
   const count = page.getByLabel("count", { exact: true });
 
-  await page.goto("/counter");
+  await page.goto("/");
   await page.getByRole("button", { name: "+" }).click();
   await expect(count).toHaveText("1");
   await page.getByRole("link", { name: "Demo" }).click();

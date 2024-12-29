@@ -122,7 +122,7 @@ const Todo = () => {
           aria-label="Add a new todo"
           value={input}
           onChange={(e) => todoActions.setInput(e.target.value)}
-          className="border-2 rounded p-1 mr-2"
+          className="mr-2"
         />
         <button type="submit">Add</button>
       </form>
