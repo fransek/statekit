@@ -64,6 +64,7 @@ export type StoreOptions<TState extends object> = {
  * @returns {Store<TState, TActions>} The created store with state management methods.
  *
  * @example
+ * ```ts
  * import { createStore } from "@fransek/statekit";
  *
  * const store = createStore({ count: 0 }, (set) => ({
@@ -71,6 +72,7 @@ export type StoreOptions<TState extends object> = {
  *   decrement: () => set((state) => ({ count: state.count - 1 })),
  *   reset: () => set({ count: 0 }),
  * }));
+ * ```
  */
 export const createStore = <
   TState extends object,

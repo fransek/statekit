@@ -28,6 +28,7 @@ export type PersistentStoreOptions<TState extends object> =
  * @returns {Store<TState, TActions>} The created store.
  *
  * @example
+ * ```ts
  * import { createPersistentStore } from "@fransek/statekit";
  *
  * const store = createPersistentStore("count", { count: 0 }, (set) => ({
@@ -35,6 +36,7 @@ export type PersistentStoreOptions<TState extends object> =
  *   decrement: () => set((state) => ({ count: state.count - 1 })),
  *   reset: () => set({ count: 0 }),
  * }));
+ * ```
  */
 export const createPersistentStore = <
   TState extends object,

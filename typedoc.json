@@ -1,0 +1,19 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "navigation": {
+    "includeGroups": true
+  },
+  "groupOrder": ["Functions", "*"],
+  "customCss": "./docs.css",
+  "name": "Statekit",
+  "navigationLinks": {
+    "GitHub": "https://github.com/fransek/statekit",
+    "Examples": "https://github.com/fransek/statekit/tree/master/demo/src/routes"
+  },
+  "entryPoints": ["src/index.ts"],
+  "headings": {
+    "readme": false
+  }
+}

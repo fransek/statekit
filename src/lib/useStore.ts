@@ -15,15 +15,12 @@ export type BoundStore<
 /**
  * A hook used to access a store created with `createStore` and bind it to a component.
  *
- * **Note:** If the `select` function is provided, an equality check is performed. This has some caveats:
- * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
- * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
- *
  * @param {Store<TState, TActions, TSelection>} store - The store created with `createStore`.
  * @param {(state: TState) => TSelection} [select] - A function to select a subset of the state. Can prevent unnecessary re-renders.
  * @returns {BoundStore<TState, TSelection>} An object containing the current state, actions, and set function.
  *
  * @example
+ * ```tsx
  * import { useStore } from "@fransek/statekit";
  * import { store } from "./store";
  *
@@ -42,11 +39,17 @@ export type BoundStore<
  *     </div>
  *   );
  * }
- *
- * @example
+ * ```
+ * @example With a select function
+ * ```tsx
  * const {
  *   state: { count },
  * } = useStore(globalStore, (state) => state.counter);
+ * ```
+ *
+ * **Note:** If the `select` function is provided, an equality check is performed. This has some caveats:
+ * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
+ * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
  */
 export const useStore = <
   TState extends object,
