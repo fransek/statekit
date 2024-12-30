@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CodeBlock } from "../components/CodeBlock";
+import { CodeToggle } from "../components/CodeToggle";
 import { Persistent } from "../examples/Persistent";
 import code from "../examples/Persistent?raw";
 
@@ -9,9 +9,8 @@ export const Route = createFileRoute("/persistent")({
 
 function RouteComponent() {
   return (
-    <>
+    <CodeToggle code={code}>
       <Persistent />
-      <CodeBlock>{code}</CodeBlock>
-    </>
+    </CodeToggle>
   );
 }

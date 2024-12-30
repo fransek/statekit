@@ -9,7 +9,7 @@ interface TodoState {
   todos: { title: string; complete: boolean }[];
 }
 
-interface GlobalState {
+interface SharedState {
   countState: CountState;
   todoState: TodoState;
 }
@@ -24,7 +24,7 @@ const sharedStore = createStore(
       input: "",
       todos: [],
     },
-  } as GlobalState,
+  } as SharedState,
 
   (set, get) => ({
     countActions: {

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CodeBlock } from "../components/CodeBlock";
+import { CodeToggle } from "../components/CodeToggle";
 import { Context } from "../examples/Context";
 import code from "../examples/Context?raw";
 
@@ -9,9 +9,8 @@ export const Route = createFileRoute("/context")({
 
 function RouteComponent() {
   return (
-    <>
+    <CodeToggle code={code}>
       <Context />
-      <CodeBlock>{code}</CodeBlock>
-    </>
+    </CodeToggle>
   );
 }

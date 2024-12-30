@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CodeBlock } from "../components/CodeBlock";
+import { CodeToggle } from "../components/CodeToggle";
 import { Async } from "../examples/Async";
 import code from "../examples/Async?raw";
 
@@ -9,9 +9,8 @@ export const Route = createFileRoute("/async")({
 
 function RouteComponent() {
   return (
-    <>
+    <CodeToggle code={code}>
       <Async />
-      <CodeBlock>{code}</CodeBlock>
-    </>
+    </CodeToggle>
   );
 }

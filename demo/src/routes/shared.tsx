@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CodeBlock } from "../components/CodeBlock";
+import { CodeToggle } from "../components/CodeToggle";
 import { Shared } from "../examples/Shared";
 import code from "../examples/Shared?raw";
 
@@ -9,9 +9,8 @@ export const Route = createFileRoute("/shared")({
 
 function RouteComponent() {
   return (
-    <>
+    <CodeToggle code={code}>
       <Shared />
-      <CodeBlock>{code}</CodeBlock>
-    </>
+    </CodeToggle>
   );
 }
