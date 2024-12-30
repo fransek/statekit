@@ -1,71 +1,76 @@
 import { createStore, useStore } from "@fransek/statekit";
 
-interface Post {
-  userId: number;
+interface User {
   id: number;
-  title: string;
-  body: string;
+  name: string;
+  username: string;
+  email: string;
 }
 
 interface State {
-  posts: Post[];
+  users: User[];
   loading: boolean;
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const fetchPosts = async () => {
+const fetchUsers = async () => {
   await sleep(500);
-  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const response = await fetch("https://jsonplaceholder.typicode.com/users");
   return await response.json();
 };
 
 const store = createStore(
-  { posts: [], loading: true } as State,
+  { users: [], loading: true } as State,
   (set) => ({
     refresh: async () => {
-      set({ posts: [], loading: true });
-      const posts = await fetchPosts();
-      set({ posts, loading: false });
+      set({ users: [], loading: true });
+      const users = await fetchUsers();
+      set({ users: users, loading: false });
     },
   }),
   {
     onAttach: async (state, set) => {
-      if (state.posts.length) {
+      if (state.users.length) {
         return;
       }
-      const posts = await fetchPosts();
-      set({ posts, loading: false });
+      const users = await fetchUsers();
+      set({ users: users, loading: false });
     },
   },
 );
 
 export function Async() {
   const {
-    state: { posts, loading },
+    state: { users, loading },
     actions: { refresh },
   } = useStore(store);
 
   return (
-    <>
-      <button onClick={refresh}>Refresh</button>
-      <div className="flex flex-col gap-4 max-w-[500px]">
-        {loading ? (
-          <div>Fetching posts...</div>
-        ) : (
-          posts.map((post, index) => (
-            <div key={post.id} className="border p-4 rounded w-full">
-              <h3
-                className="font-bold mb-2"
-                data-testid={`post-${index}-title`}
+    <div className="flex flex-col items-start gap-4">
+      {loading ? (
+        <div data-testid="loading">Fetching users...</div>
+      ) : (
+        <>
+          <button onClick={refresh}>Refresh</button>
+          {users.map((user, index) => (
+            <div key={user.id}>
+              <div
+                className="font-bold text-lg mb-2"
+                data-testid={`user-${index}-name`}
               >
-                {post.title}
-              </h3>
-              <p>{post.body}</p>
+                {user.name}
+              </div>
+              <div className="text-sm font-light">
+                <span className="font-bold">Email:</span> {user.email}
+              </div>
+              <div className="text-sm font-light">
+                <span className="font-bold">Username:</span> {user.username}
+              </div>
             </div>
-          ))
-        )}
-      </div>
-    </>
+          ))}
+        </>
+      )}
+    </div>
   );
 }

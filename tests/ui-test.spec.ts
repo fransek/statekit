@@ -45,23 +45,38 @@ test("To do app", async ({ page }) => {
 });
 
 test("Async actions", async ({ page }) => {
-  const loadingText = page.getByText("Fetching posts...");
-  const firstPostTitle = page.getByTestId("post-0-title");
-  await mockPostsResponse(page, [
-    { userId: 1, id: 1, title: "Post 1", body: "Body" },
+  const loadingText = page.getByTestId("loading");
+  const firstUser = page.getByTestId("user-0-name");
+  await mockUsersResponse(page, [
+    {
+      id: 1,
+      name: "John Doe",
+      email: "john.doe@example.com",
+      username: "johndoe",
+    },
   ]);
 
   await page.goto("/async");
   await expect(loadingText).toBeVisible();
-  await expect(firstPostTitle).toHaveText("Post 1");
+  await expect(firstUser).toHaveText("John Doe");
 
-  await mockPostsResponse(page, [
-    { userId: 2, id: 2, title: "Post 2", body: "Body" },
-    { userId: 1, id: 1, title: "Post 1", body: "Body" },
+  await mockUsersResponse(page, [
+    {
+      id: 2,
+      name: "Jane Doe",
+      email: "jane.doe@example.com",
+      username: "janedoe",
+    },
+    {
+      id: 1,
+      name: "John Doe",
+      email: "john.doe@example.com",
+      username: "johndoe",
+    },
   ]);
   await page.getByRole("button", { name: "Refresh" }).click();
   await expect(loadingText).toBeVisible();
-  await expect(firstPostTitle).toHaveText("Post 2");
+  await expect(firstUser).toHaveText("Jane Doe");
 
   await page.getByRole("link", { name: "To do app" }).click();
   await page.getByRole("link", { name: "Async" }).click();
@@ -89,17 +104,17 @@ test("Shared store", async ({ page }) => {
   await expect(todoRenderCount).toHaveText("Render count: 3");
 });
 
-const mockPostsResponse = async (
+const mockUsersResponse = async (
   page: Page,
   json: {
-    userId: number;
     id: number;
-    title: string;
-    body: string;
+    name: string;
+    username: string;
+    email: string;
   }[],
 ) => {
   await page.route(
-    "https://jsonplaceholder.typicode.com/posts",
+    "https://jsonplaceholder.typicode.com/users",
     async (route) => {
       await route.fulfill({ json });
     },
