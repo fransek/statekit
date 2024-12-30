@@ -15,17 +15,17 @@ const routes: {
   path: FileRouteTypes["to"];
   title: string;
 }[] = [
-  { path: "/counter", title: "Counter" },
-  { path: "/context", title: "Counter with context" },
-  { path: "/persistent", title: "Counter with persistent state" },
-  { path: "/todo", title: "Todo app" },
-  { path: "/async", title: "Async" },
+  { path: "/", title: "Basic counter" },
+  { path: "/context", title: "Counter + context" },
+  { path: "/persistent", title: "Counter + persistent state" },
+  { path: "/todo", title: "To do app" },
+  { path: "/async", title: "Async actions" },
   { path: "/shared", title: "Shared store" },
 ];
 
 function RootComponent() {
   const activeProps = {
-    className: "text-blue-500",
+    className: "text-sky-500",
   };
 
   const pathname = useLocation({
@@ -34,15 +34,7 @@ function RootComponent() {
 
   return (
     <div className="flex">
-      <nav className="flex flex-col gap-2 text-lg border-r min-h-screen p-4">
-        <Link
-          to="/"
-          className="font-bold"
-          activeProps={activeProps}
-          activeOptions={{ exact: true }}
-        >
-          <h1>Demo</h1>
-        </Link>
+      <nav className="flex flex-col gap-2 text-lg border-r min-h-screen p-4 whitespace-nowrap">
         {routes.map(({ path, title }) => (
           <Link key={path} to={path} activeProps={activeProps}>
             {title}
@@ -56,7 +48,7 @@ function RootComponent() {
           </h1>
         </header>
         <hr />
-        <main className="p-4 w-full">
+        <main className="p-4 flex flex-col gap-4 items-start">
           <Outlet />
         </main>
       </div>

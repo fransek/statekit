@@ -37,7 +37,7 @@ function RouteComponent() {
   return (
     // Provide the store to the context
     <CounterStoreContext.Provider value={store}>
-      <div className="flex gap-4 items-center mb-4">
+      <div className="grid grid-cols-3 text-center items-center">
         <button onClick={decrement}>-</button>
         <div aria-label="count">{count}</div>
         <button onClick={increment}>+</button>

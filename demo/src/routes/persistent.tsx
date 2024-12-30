@@ -28,8 +28,8 @@ function RouteComponent() {
   } = useStore(store);
 
   return (
-    <div>
-      <div className="flex gap-4 items-center">
+    <>
+      <div className="grid grid-cols-3 text-center items-center">
         <button onClick={decrement}>-</button>
         <div aria-label="count">{count}</div>
         <button onClick={increment}>+</button>
@@ -37,6 +37,6 @@ function RouteComponent() {
       <Link target="_blank" href="/persistent">
         Duplicate this tab
       </Link>
-    </div>
+    </>
   );
 }

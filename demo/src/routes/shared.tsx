@@ -87,14 +87,14 @@ const Counter = () => {
   } = useStore(sharedStore, (state) => state.countState);
 
   return (
-    <div className="flex flex-col gap-4 border p-4 rounded">
+    <div className="flex flex-col gap-4 border p-4 rounded items-start">
       <h2 className="font-bold">Counter</h2>
-      <div className="flex gap-4 items-center">
+      <div className="grid grid-cols-3 text-center items-center">
         <button onClick={countActions.decrement}>-</button>
         <div aria-label="count">{count}</div>
         <button onClick={countActions.increment}>+</button>
       </div>
-      <div data-testid="counterRenderCount">
+      <div className="text-sm" data-testid="counterRenderCount">
         Render count: {++counterRenderCount}
       </div>
     </div>
@@ -110,7 +110,10 @@ const Todo = () => {
   } = useStore(sharedStore, (state) => state.todoState);
 
   return (
-    <div className="flex flex-col gap-4 border p-4 rounded" id="todo">
+    <div
+      className="flex flex-col gap-4 border p-4 rounded items-start"
+      id="todo"
+    >
       <h2 className="font-bold">To do</h2>
       <form
         onSubmit={(e) => {
@@ -122,7 +125,7 @@ const Todo = () => {
           aria-label="Add a new todo"
           value={input}
           onChange={(e) => todoActions.setInput(e.target.value)}
-          className="border-2 rounded p-1 mr-2"
+          className="mr-2"
         />
         <button type="submit">Add</button>
       </form>
@@ -141,7 +144,9 @@ const Todo = () => {
           ))}
         </ul>
       )}
-      <div data-testid="todoRenderCount">Render count: {++todoRenderCount}</div>
+      <div className="text-sm" data-testid="todoRenderCount">
+        Render count: {++todoRenderCount}
+      </div>
     </div>
   );
 };

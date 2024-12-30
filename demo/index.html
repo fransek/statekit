@@ -5,15 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Statekit demo</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap");
+    </style>
     <style type="text/tailwindcss">
       html {
         color-scheme: light dark;
+      }
+      body {
+        font-family: "Geist", serif;
       }
       * {
         @apply border-gray-200 dark:border-gray-800;
       }
       body {
-        @apply bg-gray-50 text-gray-950 dark:bg-gray-950 dark:text-gray-200;
+        @apply bg-gray-50 text-gray-950 dark:bg-gray-900 dark:text-gray-200;
+      }
+      input {
+        @apply border rounded p-1;
+      }
+      button {
+        @apply border rounded px-4 py-1;
+      }
+      a {
+        @apply hover:underline;
       }
     </style>
   </head>
