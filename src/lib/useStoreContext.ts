@@ -10,6 +10,7 @@ import { BoundStore, useStore } from "./useStore";
  * @returns {BoundStore<TState, TActions>} The store instance.
  *
  * @example
+ * Basic usage:
  * ```tsx
  * import { useStoreContext } from "@fransek/statekit";
  * import { StoreContext } from "./store";

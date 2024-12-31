@@ -20,6 +20,7 @@ export type BoundStore<
  * @returns {BoundStore<TState, TSelection>} An object containing the current state, actions, and set function.
  *
  * @example
+ * Basic usage:
  * ```tsx
  * import { useStore } from "@fransek/statekit";
  * import { store } from "./store";

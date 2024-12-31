@@ -28,6 +28,7 @@ export type PersistentStoreOptions<TState extends object> =
  * @returns {Store<TState, TActions>} The created store.
  *
  * @example
+ * Basic usage:
  * ```ts
  * import { createPersistentStore } from "@fransek/statekit";
  *
