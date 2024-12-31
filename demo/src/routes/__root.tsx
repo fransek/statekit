@@ -6,6 +6,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { FileRouteTypes } from "../routeTree.gen";
+import { Nav, navStore } from "../components/Nav";
+import { useStore } from "@fransek/statekit";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -24,28 +26,26 @@ const routes: {
 ];
 
 function RootComponent() {
-  const activeProps = {
-    className: "text-sky-500",
-  };
-
   const pathname = useLocation({
     select: (location) => location.pathname,
   });
 
+  const {
+    state: { isOpen },
+    actions: { toggle },
+  } = useStore(navStore);
+
   return (
-    <div className="flex">
-      <nav className="flex flex-col gap-2 text-lg border-r min-h-screen p-4 whitespace-nowrap">
-        {routes.map(({ path, title }) => (
-          <Link key={path} to={path} activeProps={activeProps}>
-            {title}
-          </Link>
-        ))}
-      </nav>
+    <div className="flex flex-col md:flex-row">
+      <Nav routes={routes} />
       <div className="w-full">
-        <header className="p-4 w-full">
+        <header className="p-4 w-full flex justify-between items-center">
           <h1 className="font-bold text-lg">
             {routes.find(({ path }) => path === pathname)?.title || "Demo"}
           </h1>
+          <button onClick={toggle} className="md:hidden border-0 text-xl z-10">
+            {isOpen ? "✖" : "☰"}
+          </button>
         </header>
         <hr />
         <main className="p-4 flex flex-col gap-4 items-start">
