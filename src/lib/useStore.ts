@@ -20,6 +20,7 @@ export type BoundStore<
  * @returns {BoundStore<TState, TSelection>} An object containing the current state, actions, and set function.
  *
  * @example
+ * Basic usage:
  * ```tsx
  * import { useStore } from "@fransek/statekit";
  * import { store } from "./store";
@@ -40,14 +41,15 @@ export type BoundStore<
  *   );
  * }
  * ```
- * @example With a select function
+ * @example
+ * With a select function:
  * ```tsx
  * const {
  *   state: { count },
  * } = useStore(globalStore, (state) => state.counter);
  * ```
- *
- * **Note:** If the `select` function is provided, an equality check is performed. This has some caveats:
+ * @remarks
+ * If the `select` function is provided, an equality check is performed. This has some caveats:
  * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
  * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
  */

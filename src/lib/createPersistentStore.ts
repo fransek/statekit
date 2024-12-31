@@ -28,6 +28,7 @@ export type PersistentStoreOptions<TState extends object> =
  * @returns {Store<TState, TActions>} The created store.
  *
  * @example
+ * Basic usage:
  * ```ts
  * import { createPersistentStore } from "@fransek/statekit";
  *
@@ -36,6 +37,25 @@ export type PersistentStoreOptions<TState extends object> =
  *   decrement: () => set((state) => ({ count: state.count - 1 })),
  *   reset: () => set({ count: 0 }),
  * }));
+ * ```
+ * @example
+ * With superjson serialization:
+ * ```ts
+ * import { createPersistentStore } from "@fransek/statekit";
+ * import superjson from "superjson";
+ *
+ * const store = createPersistentStore(
+ *   "count",
+ *   { count: 0 },
+ *   (set) => ({
+ *     increment: () => set((state) => ({ count: state.count + 1 })),
+ *     decrement: () => set((state) => ({ count: state.count - 1 })),
+ *     reset: () => set({ count: 0 }),
+ *   }),
+ *   {
+ *     serializer: superjson,
+ *   },
+ * );
  * ```
  */
 export const createPersistentStore = <

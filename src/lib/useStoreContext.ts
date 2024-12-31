@@ -10,6 +10,7 @@ import { BoundStore, useStore } from "./useStore";
  * @returns {BoundStore<TState, TActions>} The store instance.
  *
  * @example
+ * Basic usage:
  * ```tsx
  * import { useStoreContext } from "@fransek/statekit";
  * import { StoreContext } from "./store";
@@ -30,14 +31,15 @@ import { BoundStore, useStore } from "./useStore";
  *   );
  * }
  * ```
- * @example With a select function
+ * @example
+ * With a select function:
  * ```tsx
  * const {
  *   state: { count },
  * } = useStoreContext(GlobalStoreContext, (state) => state.counter);
  * ```
- *
- * **Note:** If the `select` function is provided, an equality check is performed. This has some caveats:
+ * @remarks
+ * If the `select` function is provided, an equality check is performed. This has some caveats:
  * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
  * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
  */
