@@ -38,7 +38,7 @@ function RootComponent() {
   return (
     <div className="flex flex-col md:flex-row">
       <Nav routes={routes} />
-      <div className="w-full">
+      <div className="w-full overflow-auto">
         <header className="p-4 w-full flex justify-between items-center">
           <h1 className="font-bold text-lg">
             {routes.find(({ path }) => path === pathname)?.title || "Demo"}
@@ -52,7 +52,9 @@ function RootComponent() {
           <Outlet />
         </main>
       </div>
-      <TanStackRouterDevtools position="bottom-right" />
+      {process.env.NODE_ENV === "development" && (
+        <TanStackRouterDevtools position="bottom-right" />
+      )}
     </div>
   );
 }
