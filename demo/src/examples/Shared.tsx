@@ -14,74 +14,76 @@ interface SharedState {
   todoState: TodoState;
 }
 
-const sharedStore = createStore(
-  {
-    countState: {
-      count: 0,
-    },
-    todoState: {
-      input: "",
-      todos: [],
-    },
-  } as SharedState,
-
-  (set, get) => {
-    const setCountState = (countState: StateModifier<CountState>) =>
-      set((state) => ({
-        countState: merge(state.countState, countState),
-      }));
-
-    const setTodoState = (todoState: StateModifier<TodoState>) =>
-      set((state) => ({
-        todoState: merge(state.todoState, todoState),
-      }));
-
-    return {
-      countActions: {
-        increment: () => setCountState((state) => ({ count: state.count + 1 })),
-        decrement: () => setCountState((state) => ({ count: state.count - 1 })),
-        reset: () => setCountState({ count: 0 }),
-      },
-      todoActions: {
-        setInput: (input: string) => setTodoState({ input }),
-        addTodo: () => {
-          if (!get().todoState.input) {
-            return;
-          }
-          setTodoState((state) => ({
-            todos: [...state.todos, { title: state.input, complete: false }],
-            input: "",
-          }));
-        },
-        toggleTodo: (index: number) =>
-          setTodoState((state) => ({
-            todos: state.todos.map((todo, i) => {
-              if (index === i) {
-                return { ...todo, complete: !todo.complete };
-              }
-              return todo;
-            }),
-          })),
-      },
-    };
+const initialState: SharedState = {
+  countState: {
+    count: 0,
   },
-);
+  todoState: {
+    input: "",
+    todos: [],
+  },
+};
+
+const sharedStore = createStore(initialState, (set, get) => {
+  const setCountState = (countState: StateModifier<CountState>) =>
+    set((state) => ({
+      countState: merge(state.countState, countState),
+    }));
+
+  const setTodoState = (todoState: StateModifier<TodoState>) =>
+    set((state) => ({
+      todoState: merge(state.todoState, todoState),
+    }));
+
+  return {
+    countActions: {
+      increment: () => setCountState((state) => ({ count: state.count + 1 })),
+      decrement: () => setCountState((state) => ({ count: state.count - 1 })),
+    },
+    todoActions: {
+      setInput: (input: string) => setTodoState({ input }),
+      addTodo: () => {
+        if (!get().todoState.input) {
+          return;
+        }
+        setTodoState((state) => ({
+          todos: [...state.todos, { title: state.input, complete: false }],
+          input: "",
+        }));
+      },
+      toggleTodo: (index: number) =>
+        setTodoState((state) => ({
+          todos: state.todos.map((todo, i) => {
+            if (index === i) {
+              return { ...todo, complete: !todo.complete };
+            }
+            return todo;
+          }),
+        })),
+    },
+  };
+});
+
+const useSharedStore = <T = SharedState,>(select?: (state: SharedState) => T) =>
+  useStore(sharedStore, select);
 
 let counterRenderCount = 0;
 
 const Counter = () => {
   const {
     state: { count },
-    actions: { countActions },
-  } = useStore(sharedStore, (state) => state.countState);
+    actions: {
+      countActions: { increment, decrement },
+    },
+  } = useSharedStore((state) => state.countState);
 
   return (
     <div className="flex flex-col gap-4 border p-4 rounded items-start">
       <h2 className="font-bold">Counter</h2>
       <div className="grid grid-cols-3 text-center items-center">
-        <button onClick={countActions.decrement}>-</button>
+        <button onClick={decrement}>-</button>
         <div aria-label="count">{count}</div>
-        <button onClick={countActions.increment}>+</button>
+        <button onClick={increment}>+</button>
       </div>
       <div className="text-sm" data-testid="counterRenderCount">
         Render count: {++counterRenderCount}
@@ -95,8 +97,10 @@ let todoRenderCount = 0;
 const Todo = () => {
   const {
     state: { input, todos },
-    actions: { todoActions },
-  } = useStore(sharedStore, (state) => state.todoState);
+    actions: {
+      todoActions: { addTodo, setInput, toggleTodo },
+    },
+  } = useSharedStore((state) => state.todoState);
 
   return (
     <div
@@ -107,13 +111,13 @@ const Todo = () => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          todoActions.addTodo();
+          addTodo();
         }}
       >
         <input
           aria-label="Add a new todo"
           value={input}
-          onChange={(e) => todoActions.setInput(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           className="mr-2"
         />
         <button type="submit">Add</button>
@@ -125,7 +129,7 @@ const Todo = () => {
               key={todo.title}
               data-testid={`todo-${index}`}
               role="button"
-              onClick={() => todoActions.toggleTodo(index)}
+              onClick={() => toggleTodo(index)}
               className={`list-disc list-inside ${todo.complete && "line-through"}`}
             >
               {todo.title}
