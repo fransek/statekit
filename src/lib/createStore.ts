@@ -1,3 +1,5 @@
+import { merge } from "./merge";
+
 export type Store<TState extends object, TActions extends object> = {
   /** Returns the current state of the store. */
   get: () => TState;
@@ -134,11 +136,7 @@ export const createStore = <
   const get = () => state;
 
   const setSilently = (stateModifier: StateModifier<TState>) => {
-    const newState =
-      typeof stateModifier === "function"
-        ? stateModifier(state)
-        : stateModifier;
-    state = { ...state, ...newState };
+    state = merge(state, stateModifier);
     return state;
   };
 

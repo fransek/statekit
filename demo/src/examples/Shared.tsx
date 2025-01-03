@@ -1,4 +1,4 @@
-import { createStore, useStore } from "@fransek/statekit";
+import { createStore, merge, StateModifier, useStore } from "@fransek/statekit";
 
 interface CountState {
   count: number;
@@ -19,58 +19,52 @@ const sharedStore = createStore(
     countState: {
       count: 0,
     },
-
     todoState: {
       input: "",
       todos: [],
     },
   } as SharedState,
 
-  (set, get) => ({
-    countActions: {
-      increment: () =>
-        set((state) => ({ countState: { count: state.countState.count + 1 } })),
+  (set, get) => {
+    const setCountState = (countState: StateModifier<CountState>) =>
+      set((state) => ({
+        countState: merge(state.countState, countState),
+      }));
 
-      decrement: () =>
-        set((state) => ({ countState: { count: state.countState.count - 1 } })),
+    const setTodoState = (todoState: StateModifier<TodoState>) =>
+      set((state) => ({
+        todoState: merge(state.todoState, todoState),
+      }));
 
-      reset: () => set({ countState: { count: 0 } }),
-    },
-
-    todoActions: {
-      setInput: (input: string) =>
-        set((state) => ({ todoState: { ...state.todoState, input } })),
-
-      addTodo: () => {
-        if (!get().todoState.input) {
-          return;
-        }
-
-        set((state) => ({
-          todoState: {
-            todos: [
-              ...state.todoState.todos,
-              { title: state.todoState.input, complete: false },
-            ],
-            input: "",
-          },
-        }));
+    return {
+      countActions: {
+        increment: () => setCountState((state) => ({ count: state.count + 1 })),
+        decrement: () => setCountState((state) => ({ count: state.count - 1 })),
+        reset: () => setCountState({ count: 0 }),
       },
-
-      toggleTodo: (index: number) =>
-        set((state) => ({
-          todoState: {
-            ...state.todoState,
-            todos: state.todoState.todos.map((todo, i) => {
+      todoActions: {
+        setInput: (input: string) => setTodoState({ input }),
+        addTodo: () => {
+          if (!get().todoState.input) {
+            return;
+          }
+          setTodoState((state) => ({
+            todos: [...state.todos, { title: state.input, complete: false }],
+            input: "",
+          }));
+        },
+        toggleTodo: (index: number) =>
+          setTodoState((state) => ({
+            todos: state.todos.map((todo, i) => {
               if (index === i) {
                 return { ...todo, complete: !todo.complete };
               }
               return todo;
             }),
-          },
-        })),
-    },
-  }),
+          })),
+      },
+    };
+  },
 );
 
 let counterRenderCount = 0;
