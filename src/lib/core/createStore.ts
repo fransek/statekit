@@ -1,4 +1,4 @@
-import { merge } from "./merge";
+import { merge } from "../utils/merge";
 
 export type Store<TState extends object, TActions extends object> = {
   /** Returns the current state of the store. */
@@ -75,6 +75,7 @@ export type StoreOptions<TState extends object> = {
  *   reset: () => set({ count: 0 }),
  * }));
  * ```
+ * @group Core
  */
 export const createStore = <
   TState extends object,

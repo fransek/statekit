@@ -57,6 +57,7 @@ export type PersistentStoreOptions<TState extends object> =
  *   },
  * );
  * ```
+ * @group Core
  */
 export const createPersistentStore = <
   TState extends object,

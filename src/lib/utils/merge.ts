@@ -1,4 +1,4 @@
-import { StateModifier } from "./createStore";
+import { StateModifier } from "../core/createStore";
 
 /**
  * Merges the current state with a state modifier.
@@ -33,8 +33,8 @@ import { StateModifier } from "./createStore";
  *     };
  *   },
  * );
- *
  * ```
+ * @group Utilities
  */
 export const merge = <T extends object>(
   currentState: T,

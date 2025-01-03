@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { StateModifier } from "./createStore";
 import { merge } from "./merge";
+import { StateModifier } from "../core/createStore";
 
 interface TestState {
   a: number;

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StoreContext } from "./createStoreContext";
+import { StoreContext } from "../utils/createStoreContext";
 import { BoundStore, useStore } from "./useStore";
 
 /**
@@ -42,6 +42,8 @@ import { BoundStore, useStore } from "./useStore";
  * If the `select` function is provided, an equality check is performed. This has some caveats:
  * - For optimal performance, return a direct reference to the state. (e.g. `state.count`)
  * - If you return an object literal, it should only contain direct references to the state. (e.g. `{ count: state.count }`)
+ *
+ * @group Hooks
  */
 export const useStoreContext = <
   TArgs extends unknown[],

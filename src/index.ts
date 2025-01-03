@@ -1,6 +1,8 @@
-export * from "./lib/createStore";
-export * from "./lib/createStoreContext";
-export * from "./lib/useStore";
-export * from "./lib/useStoreContext";
-export * from "./lib/createPersistentStore";
-export * from "./lib/merge";
+export * from "./lib/core/createStore";
+export * from "./lib/core/createPersistentStore";
+
+export * from "./lib/hooks/useStore";
+export * from "./lib/hooks/useStoreContext";
+
+export * from "./lib/utils/createStoreContext";
+export * from "./lib/utils/merge";
