@@ -5,7 +5,7 @@
   "navigation": {
     "includeGroups": true
   },
-  "groupOrder": ["Functions", "*"],
+  "groupOrder": ["Core", "Hooks", "Utilities", "*"],
   "customCss": "./docs.css",
   "name": "Statekit",
   "navigationLinks": {

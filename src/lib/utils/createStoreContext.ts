@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Store } from "./createStore";
+import { Store } from "../core/createStore";
 
 export type StoreContext<
   TArgs extends unknown[],
@@ -47,6 +47,7 @@ export type StoreContext<
  *   );
  * }
  * ```
+ * @group Utilities
  */
 export const createStoreContext = <
   TArgs extends unknown[],

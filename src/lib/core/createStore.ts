@@ -1,3 +1,5 @@
+import { merge } from "../utils/merge";
+
 export type Store<TState extends object, TActions extends object> = {
   /** Returns the current state of the store. */
   get: () => TState;
@@ -73,6 +75,7 @@ export type StoreOptions<TState extends object> = {
  *   reset: () => set({ count: 0 }),
  * }));
  * ```
+ * @group Core
  */
 export const createStore = <
   TState extends object,
@@ -134,11 +137,7 @@ export const createStore = <
   const get = () => state;
 
   const setSilently = (stateModifier: StateModifier<TState>) => {
-    const newState =
-      typeof stateModifier === "function"
-        ? stateModifier(state)
-        : stateModifier;
-    state = { ...state, ...newState };
+    state = merge(state, stateModifier);
     return state;
   };
 
