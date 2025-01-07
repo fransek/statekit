@@ -47,11 +47,10 @@ export const Counter = ({ initialCount }: { initialCount: number }) => {
 const ResetButton = () => {
   // Access the store from the context
   const {
-    state: { count },
     actions: { reset },
   } = useStoreContext(CounterStoreContext);
 
-  return <button onClick={reset}>Squared: {count * count}</button>;
+  return <button onClick={reset}>Reset</button>;
 };
 
 export const Context = () => (
