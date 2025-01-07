@@ -1,10 +1,10 @@
 import {
-  createStoreContext,
   createStore,
+  createStoreContext,
   useStore,
   useStoreContext,
 } from "@fransek/statekit";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 
 // Create the store context
 const CounterStoreContext = createStoreContext((initialCount: number) =>
@@ -47,10 +47,11 @@ export const Counter = ({ initialCount }: { initialCount: number }) => {
 const ResetButton = () => {
   // Access the store from the context
   const {
+    state: { count },
     actions: { reset },
-  } = useStoreContext(CounterStoreContext, () => null);
+  } = useStoreContext(CounterStoreContext);
 
-  return <button onClick={reset}>Reset</button>;
+  return <button onClick={reset}>Squared: {count * count}</button>;
 };
 
 export const Context = () => (
