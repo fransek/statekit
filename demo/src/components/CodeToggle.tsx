@@ -14,13 +14,13 @@ export const CodeToggle: FC<Props> = ({ code, children: children }) => {
       <div className="flex gap-4">
         <button
           onClick={() => setShowCode(false)}
-          className={`border-0 hover:underline p-0 ${!showCode ? "text-sky-500" : "text-gray-400"}`}
+          className={`border-0 hover:underline p-0 ${!showCode && "text-sky-500"}`}
         >
           Preview
         </button>
         <button
           onClick={() => setShowCode(true)}
-          className={`border-0 hover:underline p-0 ${showCode ? "text-sky-500" : "text-gray-400"}`}
+          className={`border-0 hover:underline p-0 ${showCode && "text-sky-500"}`}
         >
           Code
         </button>

@@ -48,7 +48,7 @@ const ResetButton = () => {
   // Access the store from the context
   const {
     actions: { reset },
-  } = useStoreContext(CounterStoreContext);
+  } = useStoreContext(CounterStoreContext, () => null);
 
   return <button onClick={reset}>Reset</button>;
 };
