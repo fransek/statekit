@@ -8,6 +8,7 @@ import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { FileRouteTypes } from "../routeTree.gen";
 import { Nav, navStore } from "../components/Nav";
 import { useStore } from "@fransek/statekit";
+import { Menu, X } from "lucide-react";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -43,11 +44,8 @@ function RootComponent() {
           <h1 className="font-bold text-lg">
             {routes.find(({ path }) => path === pathname)?.title || "Demo"}
           </h1>
-          <button
-            onClick={toggle}
-            className="md:hidden border-0 text-xl text-gray-200 z-10"
-          >
-            {isOpen ? "✖" : "☰"}
+          <button onClick={toggle} className="md:hidden border-0 text-xl z-10">
+            {isOpen ? <X /> : <Menu />}
           </button>
         </header>
         <hr />
