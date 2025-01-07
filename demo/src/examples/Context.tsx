@@ -4,25 +4,27 @@ import {
   useStore,
   useStoreContext,
 } from "@fransek/statekit";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 
 // Create the store context
-const CounterStoreContext = createStoreContext(
-  (initialState: { count: number }) =>
-    createStore(
-      initialState,
-      (set) => ({
-        increment: () => set((state) => ({ count: state.count + 1 })),
-        decrement: () => set((state) => ({ count: state.count - 1 })),
-        reset: () => set({ count: 0 }),
-      }),
-      { resetOnDetach: true },
-    ),
+const CounterStoreContext = createStoreContext((initialCount: number) =>
+  createStore(
+    { count: initialCount },
+    (set) => ({
+      increment: () => set((state) => ({ count: state.count + 1 })),
+      decrement: () => set((state) => ({ count: state.count - 1 })),
+      reset: () => set({ count: initialCount }),
+    }),
+    { resetOnDetach: true },
+  ),
 );
 
-export const Context = () => {
+export const Counter = ({ initialCount }: { initialCount: number }) => {
   // Create an instance of the store. Make sure the store is not instantiated on every render.
-  const store = useRef(CounterStoreContext.instantiate({ count: 0 })).current;
+  const store = useMemo(
+    () => CounterStoreContext.instantiate(initialCount),
+    [initialCount],
+  );
   // Use the store
   const {
     state: { count },
@@ -46,7 +48,26 @@ const ResetButton = () => {
   // Access the store from the context
   const {
     actions: { reset },
-  } = useStoreContext(CounterStoreContext);
+  } = useStoreContext(CounterStoreContext, () => null);
 
   return <button onClick={reset}>Reset</button>;
 };
+
+export const Context = () => (
+  <>
+    <div
+      className="flex flex-col gap-4 border p-4 rounded items-start"
+      id="todo"
+    >
+      <h2 className="font-bold">Counter 1</h2>
+      <Counter initialCount={0} />
+    </div>
+    <div
+      className="flex flex-col gap-4 border p-4 rounded items-start"
+      id="todo"
+    >
+      <h2 className="font-bold">Counter 2</h2>
+      <Counter initialCount={10} />
+    </div>
+  </>
+);

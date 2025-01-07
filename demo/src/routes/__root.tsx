@@ -43,7 +43,10 @@ function RootComponent() {
           <h1 className="font-bold text-lg">
             {routes.find(({ path }) => path === pathname)?.title || "Demo"}
           </h1>
-          <button onClick={toggle} className="md:hidden border-0 text-xl z-10">
+          <button
+            onClick={toggle}
+            className="md:hidden border-0 text-xl text-gray-200 z-10"
+          >
             {isOpen ? "✖" : "☰"}
           </button>
         </header>
