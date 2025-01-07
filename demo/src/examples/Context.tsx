@@ -55,17 +55,11 @@ const ResetButton = () => {
 
 export const Context = () => (
   <>
-    <div
-      className="flex flex-col gap-4 border p-4 rounded items-start"
-      id="todo"
-    >
+    <div className="flex flex-col gap-4 border p-4 rounded items-start">
       <h2 className="font-bold">Counter 1</h2>
       <Counter initialCount={0} />
     </div>
-    <div
-      className="flex flex-col gap-4 border p-4 rounded items-start"
-      id="todo"
-    >
+    <div className="flex flex-col gap-4 border p-4 rounded items-start">
       <h2 className="font-bold">Counter 2</h2>
       <Counter initialCount={10} />
     </div>

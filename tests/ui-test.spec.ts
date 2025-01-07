@@ -14,13 +14,16 @@ test("Basic counter", async ({ page }) => {
 });
 
 test("Counter + context", async ({ page }) => {
-  const count = page.getByLabel("count");
+  const count1 = page.getByLabel("count").first();
+  const count2 = page.getByLabel("count").nth(1);
 
   await page.goto("/context");
-  await page.getByRole("button", { name: "+" }).click();
-  await expect(count).toHaveText("1");
-  await page.getByRole("button", { name: "Reset" }).click();
-  await expect(count).toHaveText("0");
+  await expect(count1).toHaveText("0");
+  await expect(count2).toHaveText("10");
+  await page.getByRole("button", { name: "+" }).first().click();
+  await expect(count1).toHaveText("1");
+  await page.getByRole("button", { name: "Reset" }).first().click();
+  await expect(count1).toHaveText("0");
 });
 
 test("Counter + persistent state", async ({ page }) => {
