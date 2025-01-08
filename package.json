@@ -1,6 +1,6 @@
 {
   "name": "@fransek/statekit",
-  "version": "1.2.0-rc.0",
+  "version": "1.2.0",
   "author": "Frans Ekman <fransedvinekman@gmail.com>",
   "license": "MIT",
   "description": "A tiny state management library for React.",
