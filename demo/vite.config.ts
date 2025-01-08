@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@fransek/statekit": resolve(__dirname, "../src"),
+      "@": resolve(__dirname, "../src/lib"),
     },
   },
 });
