@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StoreContext } from "../utils/createStoreContext";
+import { StoreContext } from "@/utils/createStoreContext";
 import { BoundStore, useStore } from "./useStore";
 
 /**

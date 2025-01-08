@@ -1,4 +1,4 @@
-import { merge } from "../utils/merge";
+import { merge } from "@/utils/merge";
 
 export type Store<TState extends object, TActions extends object> = {
   /** Returns the current state of the store. */

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { afterEach, describe, expect, it } from "vitest";
 import { useStore } from "./useStore";
-import { createStore } from "../core/createStore";
+import { createStore } from "@/core/createStore";
 
 describe("useStore", () => {
   const store = createStore({ count: 0 }, (set) => ({
