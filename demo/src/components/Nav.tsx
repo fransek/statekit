@@ -1,6 +1,7 @@
 import { createStore, useStore } from "@fransek/statekit";
 import { Link } from "@tanstack/react-router";
 import { FC } from "react";
+import { Logo } from "./Logo";
 
 interface Props {
   routes: {
@@ -23,7 +24,8 @@ export const Nav: FC<Props> = ({ routes }) => {
     <nav
       className={`flex-col gap-2 text-lg border-r min-h-screen p-4 whitespace-nowrap bg-gray-900 absolute md:relative w-screen md:w-auto md:flex ${isOpen ? "flex" : "hidden"}`}
     >
-      <h1 className="font-bold text-xl text-gray-200 mb-2">
+      <h1 className="font-bold text-xl text-gray-200 mb-2 flex items-center gap-2">
+        <Logo size={24} />
         Statekit examples
       </h1>
       {routes.map(({ path, title }) => (

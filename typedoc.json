@@ -16,5 +16,5 @@
   "headings": {
     "readme": false
   },
-  "favicon": "demo/src/statekit-logo.svg"
+  "favicon": "demo/src/logo.svg"
 }
