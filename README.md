@@ -1,4 +1,7 @@
-# Statekit
+<h1 style="display: flex; align-items: center; gap: 0.5rem;">
+  <img src="./demo/src/statekit-logo.svg" alt="Statekit logo" width="32" />
+  Statekit
+</h1>
 
 [![Version](https://img.shields.io/npm/v/@fransek/statekit)](https://npmjs.com/package/@fransek/statekit)
 [![Downloads](https://img.shields.io/npm/dm/@fransek/statekit.svg)](https://npmjs.com/package/@fransek/statekit)
