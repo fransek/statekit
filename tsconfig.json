@@ -9,10 +9,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "declaration": true,
-    "strict": true,
-    "paths": {
-      "@/*": ["./src/lib/*"]
-    }
+    "strict": true
   },
   "include": ["src"]
 }

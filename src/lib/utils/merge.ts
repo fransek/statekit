@@ -1,4 +1,4 @@
-import { StateModifier } from "@/core/createStore";
+import { StateModifier } from "../core/createStore";
 
 /**
  * Merges the current state with a state modifier.

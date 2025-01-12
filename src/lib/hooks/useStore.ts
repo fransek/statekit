@@ -1,5 +1,5 @@
-import { StateModifier, Store } from "@/core/createStore";
-import { deeplyEquals } from "@/utils/deeplyEquals";
+import { StateModifier, Store } from "../core/createStore";
+import { deeplyEquals } from "../utils/deeplyEquals";
 import { useRef, useSyncExternalStore } from "react";
 
 export type BoundStore<
