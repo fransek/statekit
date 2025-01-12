@@ -1,11 +1,18 @@
-<h1 style="display: flex; align-items: center; gap: 0.5rem;">
-  <img src="./demo/src/statekit-logo.svg" alt="Statekit logo" width="32" />
-  Statekit
-</h1>
-
-[![Version](https://img.shields.io/npm/v/@fransek/statekit)](https://npmjs.com/package/@fransek/statekit)
-[![Downloads](https://img.shields.io/npm/dm/@fransek/statekit.svg)](https://npmjs.com/package/@fransek/statekit)
-[![Minzipped size](https://img.shields.io/bundlephobia/minzip/@fransek/statekit)](https://bundlephobia.com/package/@fransek/statekit)
+<div align="center">
+  <img src="./demo/src/statekit-logo.svg" alt="Statekit logo" width="128" />
+  <h1 align="center">
+    Statekit
+  </h1>
+  <a href="https://npmjs.com/package/@fransek/statekit">
+    <img src="https://img.shields.io/npm/v/@fransek/statekit" alt="License" />
+  </a>
+  <a href="https://npmjs.com/package/@fransek/statekit">
+    <img src="https://img.shields.io/npm/dm/@fransek/statekit" alt="Downloads" />
+  </a>
+  <a href="https://bundlephobia.com/package/@fransek/statekit">
+    <img src="https://img.shields.io/bundlephobia/minzip/@fransek/statekit" alt="Minzipped size" />
+  </a>
+</div>
 
 A tiny state management library for React.
 
