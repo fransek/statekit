@@ -30,6 +30,7 @@
       "require": "./dist/cjs/index.js"
     }
   },
+  "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
