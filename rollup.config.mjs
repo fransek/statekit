@@ -2,7 +2,8 @@ import typescript from "@rollup/plugin-typescript";
 
 const input = "src/index.ts";
 
-const getConfig = (format, dir) => ({
+/** @type {() => import('rollup').RollupOptions} */
+const createConfig = (format, dir) => ({
   input,
   external: ["react"],
   output: {
@@ -21,4 +22,7 @@ const getConfig = (format, dir) => ({
   ],
 });
 
-export default [getConfig("cjs", "dist"), getConfig("esm", "dist/esm")];
+export default [
+  createConfig("cjs", "dist/cjs"),
+  createConfig("esm", "dist/esm"),
+];
