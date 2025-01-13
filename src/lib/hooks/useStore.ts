@@ -1,6 +1,6 @@
+import { useRef, useSyncExternalStore } from "react";
 import { StateModifier, Store } from "../core/createStore";
 import { deeplyEquals } from "../utils/deeplyEquals";
-import { useRef, useSyncExternalStore } from "react";
 
 export type BoundStore<
   TState extends object,

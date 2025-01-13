@@ -2,8 +2,8 @@ import { act, render, renderHook, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { afterEach, describe, expect, it } from "vitest";
-import { useStore } from "./useStore";
 import { createStore } from "../core/createStore";
+import { useStore } from "./useStore";
 
 describe("useStore", () => {
   const store = createStore({ count: 0 }, (set) => ({
