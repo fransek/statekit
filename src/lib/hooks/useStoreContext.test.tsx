@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 import React, { useRef } from "react";
 import { describe, expect, it } from "vitest";
+import { createStore } from "../core/createStore";
 import { createStoreContext } from "../utils/createStoreContext";
 import { useStoreContext } from "./useStoreContext";
-import { createStore } from "../core/createStore";
 
 describe("useStoreContext", () => {
   const StoreContext = createStoreContext((initialCount: number) =>

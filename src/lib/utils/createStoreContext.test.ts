@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { createStoreContext } from "./createStoreContext";
+import { describe, expect, it } from "vitest";
 import { createStore } from "../core/createStore";
+import { createStoreContext } from "./createStoreContext";
 
 describe("createStoreContext", () => {
   it("should create a store context with an instantiation function", () => {

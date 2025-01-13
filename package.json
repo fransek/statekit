@@ -22,10 +22,17 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc --build",
-    "dev": "tsc --watch",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
     "test": "vitest --run",
     "test:watch": "vitest",
     "ui-test": "playwright test",
@@ -41,6 +48,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.1.0",
     "@testing-library/user-event": "^14.5.2",
@@ -57,7 +65,9 @@
     "jsdom": "^25.0.1",
     "lint-staged": "^15.2.11",
     "prettier": "^3.4.2",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "react": "^19.0.0",
+    "rollup": "^4.30.1",
     "superjson": "^2.2.2",
     "tsx": "^4.19.2",
     "typedoc": "^0.27.6",

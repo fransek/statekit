@@ -1,6 +1,6 @@
+import superjson from "superjson";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createPersistentStore } from "./createPersistentStore";
-import superjson from "superjson";
 
 describe("createPersistentStore", () => {
   const key = "test";
