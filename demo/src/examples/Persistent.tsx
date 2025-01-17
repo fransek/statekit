@@ -11,7 +11,7 @@ const store = createPersistentStore(
     decrement: () => set((state) => ({ count: state.count - 1 })),
   }),
   {
-    // storage: "session",
+    // storage: sessionStorage,
     // serializer: superjson,
   },
 );
