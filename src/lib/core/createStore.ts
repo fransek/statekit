@@ -5,27 +5,17 @@ export type Store<TState extends object, TActions extends object> = {
   get: () => TState;
   /** Sets the state of the store. */
   set: (stateModifier: StateModifier<TState>) => TState;
-  /** Subscribes to changes in the state of the store. Returns an unsubscribe function. */
-  subscribe: (listener: Listener) => Listener;
   /** Actions that can modify the state of the store. */
   actions: TActions;
-  /** Adds an event listener to the store. */
-  addEventListener: (
-    event: StoreEvent,
-    listener: StoreListener<TState>,
-  ) => void;
-  /** Removes an event listener from the store. */
-  removeEventListener: (
-    event: StoreEvent,
-    listener: StoreListener<TState>,
-  ) => void;
+  /** Subscribes to changes in the state of the store. Returns an unsubscribe function. */
+  subscribe: (listener: Listener) => Listener;
 };
 
 type Listener = () => void;
 
 export type StoreEvent = "attach" | "detach" | "change" | "load";
 
-export type StoreListener<TState extends object> = (
+export type StoreEventHandler<TState extends object> = (
   state: TState,
   set: SetState<TState>,
 ) => void;
@@ -47,13 +37,13 @@ export type DefineActions<TState extends object, TActions> = (
 
 export type StoreOptions<TState extends object> = {
   /** Invoked when the store is created. */
-  onLoad?: StoreListener<TState>;
+  onLoad?: StoreEventHandler<TState>;
   /** Invoked when the store is subscribed to. */
-  onAttach?: StoreListener<TState>;
+  onAttach?: StoreEventHandler<TState>;
   /** Invoked when the store is unsubscribed from. */
-  onDetach?: StoreListener<TState>;
+  onDetach?: StoreEventHandler<TState>;
   /** Invoked whenever the state changes. */
-  onStateChange?: StoreListener<TState>;
+  onStateChange?: StoreEventHandler<TState>;
   /** Whether to reset the state to the initial state when the store is detached. */
   resetOnDetach?: boolean;
 };
@@ -96,33 +86,6 @@ export const createStore = <
   let state = initialState;
   const listeners = new Set<Listener>();
 
-  const eventListeners: Record<StoreEvent, Set<StoreListener<TState>>> = {
-    load: new Set(onLoad ? [onLoad] : []),
-    attach: new Set(onAttach ? [onAttach] : []),
-    detach: new Set(onDetach ? [onDetach] : []),
-    change: new Set(onStateChange ? [onStateChange] : []),
-  };
-
-  const addEventListener = (
-    event: StoreEvent,
-    listener: StoreListener<TState>,
-  ) => {
-    eventListeners[event].add(listener);
-  };
-
-  const removeEventListener = (
-    event: StoreEvent,
-    listener: StoreListener<TState>,
-  ) => {
-    eventListeners[event].delete(listener);
-  };
-
-  const dispatchEvent = (event: StoreEvent, silent = false) => {
-    eventListeners[event].forEach((listener) =>
-      listener(state, silent ? setSilently : set),
-    );
-  };
-
   const get = () => state;
 
   const setSilently = (stateModifier: StateModifier<TState>) => {
@@ -131,7 +94,7 @@ export const createStore = <
   };
 
   const dispatch = () => {
-    dispatchEvent("change", true);
+    onStateChange?.(state, setSilently);
     listeners.forEach((listener) => listener());
   };
 
@@ -143,7 +106,7 @@ export const createStore = <
 
   const subscribe = (listener: Listener) => {
     if (listeners.size === 0) {
-      dispatchEvent("attach");
+      onAttach?.(state, set);
     }
 
     listeners.add(listener);
@@ -152,7 +115,7 @@ export const createStore = <
       listeners.delete(listener);
 
       if (listeners.size === 0) {
-        dispatchEvent("detach");
+        onDetach?.(state, set);
 
         if (resetOnDetach) {
           state = initialState;
@@ -164,14 +127,12 @@ export const createStore = <
 
   const actions = defineActions ? defineActions(set, get) : ({} as TActions);
 
-  dispatchEvent("load");
+  onLoad?.(state, set);
 
   return {
     get,
     set,
     subscribe,
     actions,
-    addEventListener,
-    removeEventListener,
   };
 };

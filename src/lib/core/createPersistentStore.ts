@@ -69,13 +69,14 @@ export const createPersistentStore = <
   {
     storage: _storage = "local",
     serializer = JSON,
+    onAttach,
+    onDetach,
+    onStateChange,
     ...options
   }: PersistentStoreOptions<TState> = {},
 ): Store<TState, TActions> => {
-  const store = createStore(initialState, defineActions, options);
-
   if (typeof window === "undefined") {
-    return store;
+    return createStore(initialState, defineActions, options);
   }
 
   const storage = _storage === "local" ? localStorage : sessionStorage;
@@ -109,15 +110,21 @@ export const createPersistentStore = <
     }
   };
 
-  store.addEventListener("attach", () => {
-    updateState();
-    store.addEventListener("change", updateSnapshot);
-    window.addEventListener("focus", updateState);
-  });
-
-  store.addEventListener("detach", () => {
-    store.removeEventListener("change", updateSnapshot);
-    window.removeEventListener("focus", updateState);
+  const store = createStore(initialState, defineActions, {
+    onAttach: (state, set) => {
+      updateState();
+      window.addEventListener("focus", updateState);
+      onAttach?.(state, set);
+    },
+    onDetach: (state, set) => {
+      window.removeEventListener("focus", updateState);
+      onDetach?.(state, set);
+    },
+    onStateChange: (state, set) => {
+      updateSnapshot(state);
+      onStateChange?.(state, set);
+    },
+    ...options,
   });
 
   return store;
