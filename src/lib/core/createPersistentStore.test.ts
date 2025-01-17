@@ -40,7 +40,7 @@ describe("createPersistentStore", () => {
     sessionStorage.setItem(initKey, JSON.stringify({ count: 0 }));
     sessionStorage.setItem(storeKey, JSON.stringify({ count: 2 }));
     const store = createPersistentStore(key, initialState, null, {
-      storage: "session",
+      storage: sessionStorage,
     });
     store.subscribe(listener);
     expect(store.get()).toEqual({ count: 2 });
