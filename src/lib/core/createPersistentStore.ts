@@ -114,17 +114,17 @@ export const createPersistentStore = <
 
   const store = createStore(initialState, defineActions, {
     onAttach: (...args) => {
+      onAttach?.(...args);
       updateState();
       window.addEventListener("focus", updateState);
-      onAttach?.(...args);
     },
     onDetach: (...args) => {
-      window.removeEventListener("focus", updateState);
       onDetach?.(...args);
+      window.removeEventListener("focus", updateState);
     },
     onStateChange: (state, ...args) => {
-      updateSnapshot(state);
       onStateChange?.(state, ...args);
+      updateSnapshot(state);
     },
     ...options,
   });
