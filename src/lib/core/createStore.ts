@@ -6,7 +6,7 @@ export type Store<TState extends object, TActions extends object> = {
   /** Sets the state of the store. */
   set: (stateModifier: StateModifier<TState>) => TState;
   /** Subscribes to changes in the state of the store. Returns an unsubscribe function. */
-  subscribe: (listener: () => void) => () => void;
+  subscribe: (listener: Listener) => Listener;
   /** Actions that can modify the state of the store. */
   actions: TActions;
   /** Adds an event listener to the store. */
@@ -20,6 +20,8 @@ export type Store<TState extends object, TActions extends object> = {
     listener: StoreListener<TState>,
   ) => void;
 };
+
+type Listener = () => void;
 
 export type StoreEvent = "attach" | "detach" | "change" | "load";
 
@@ -92,27 +94,27 @@ export const createStore = <
   }: StoreOptions<TState> = {},
 ): Store<TState, TActions> => {
   let state = initialState;
-  let listeners: (() => void)[] = [];
+  const listeners = new Set<Listener>();
 
-  const eventListeners: Record<StoreEvent, StoreListener<TState>[]> = {
-    load: [],
-    attach: [],
-    detach: [],
-    change: [],
+  const eventListeners: Record<StoreEvent, Set<StoreListener<TState>>> = {
+    load: new Set(onLoad ? [onLoad] : []),
+    attach: new Set(onAttach ? [onAttach] : []),
+    detach: new Set(onDetach ? [onDetach] : []),
+    change: new Set(onStateChange ? [onStateChange] : []),
   };
 
   const addEventListener = (
     event: StoreEvent,
     listener: StoreListener<TState>,
   ) => {
-    eventListeners[event].push(listener);
+    eventListeners[event].add(listener);
   };
 
   const removeEventListener = (
     event: StoreEvent,
     listener: StoreListener<TState>,
   ) => {
-    eventListeners[event] = eventListeners[event].filter((l) => l !== listener);
+    eventListeners[event].delete(listener);
   };
 
   const dispatchEvent = (event: StoreEvent, silent = false) => {
@@ -120,19 +122,6 @@ export const createStore = <
       listener(state, silent ? setSilently : set),
     );
   };
-
-  if (onLoad) {
-    addEventListener("load", onLoad);
-  }
-  if (onAttach) {
-    addEventListener("attach", onAttach);
-  }
-  if (onDetach) {
-    addEventListener("detach", onDetach);
-  }
-  if (onStateChange) {
-    addEventListener("change", onStateChange);
-  }
 
   const get = () => state;
 
@@ -152,16 +141,17 @@ export const createStore = <
     return state;
   };
 
-  const subscribe = (listener: () => void) => {
-    if (listeners.length === 0) {
+  const subscribe = (listener: Listener) => {
+    if (listeners.size === 0) {
       dispatchEvent("attach");
     }
 
-    listeners.push(listener);
-    return () => {
-      listeners = listeners.filter((l) => l !== listener);
+    listeners.add(listener);
 
-      if (listeners.length === 0) {
+    return () => {
+      listeners.delete(listener);
+
+      if (listeners.size === 0) {
         dispatchEvent("detach");
 
         if (resetOnDetach) {
