@@ -6,7 +6,6 @@ describe("createPersistentStore", () => {
   const key = "test";
   const initialState = { count: 0 };
   const listener = vi.fn();
-  const listener2 = vi.fn();
   const initKey = `init_${key}`;
   const storeKey = `store_${key}`;
 
@@ -54,25 +53,6 @@ describe("createPersistentStore", () => {
     localStorage.setItem(storeKey, JSON.stringify({ count: 2 }));
     window.dispatchEvent(new Event("focus"));
     expect(store.get()).toEqual({ count: 2 });
-  });
-
-  it("should add and remove event listeners once", () => {
-    const store = createPersistentStore(key, initialState);
-    const addEventListenerSpy = vi.spyOn(window, "addEventListener");
-    const addStoreListenerSpy = vi.spyOn(store, "addEventListener");
-    const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
-    const removeStoreListenerSpy = vi.spyOn(store, "removeEventListener");
-
-    const unsubscribe = store.subscribe(listener);
-    const unsubscribe2 = store.subscribe(listener2);
-    store.set({ count: 1 });
-    unsubscribe();
-    unsubscribe2();
-
-    expect(addEventListenerSpy).toHaveBeenCalledOnce();
-    expect(addStoreListenerSpy).toHaveBeenCalledOnce();
-    expect(removeEventListenerSpy).toHaveBeenCalledOnce();
-    expect(removeStoreListenerSpy).toHaveBeenCalledOnce();
   });
 
   it("should use custom serializer", () => {
