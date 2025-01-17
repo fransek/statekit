@@ -1,11 +1,13 @@
 import { createStore, DefineActions, Store, StoreOptions } from "./createStore";
 
-export type StorageType = "local" | "session";
-
 export type PersistentStoreOptions<TState extends object> =
   StoreOptions<TState> & {
-    /** The type of storage to use ("local" or "session"). Defaults to "local". */
-    storage?: StorageType;
+    /** The storage to use for persisting the state. Defaults to local storage. */
+    storage?: {
+      getItem: (key: string) => string | null;
+      setItem: (key: string, value: string) => void;
+      removeItem: (key: string) => void;
+    };
     /** The serializer to use for storing the state. Defaults to JSON. */
     serializer?: {
       stringify: (value: TState) => string;
@@ -39,7 +41,7 @@ export type PersistentStoreOptions<TState extends object> =
  * }));
  * ```
  * @example
- * With superjson serialization:
+ * With superjson serialization and session storage:
  * ```ts
  * import { createPersistentStore } from "@fransek/statekit";
  * import superjson from "superjson";
@@ -54,6 +56,7 @@ export type PersistentStoreOptions<TState extends object> =
  *   }),
  *   {
  *     serializer: superjson,
+ *     storage: sessionStorage,
  *   },
  * );
  * ```
@@ -67,7 +70,7 @@ export const createPersistentStore = <
   initialState: TState,
   defineActions: DefineActions<TState, TActions> | null = null,
   {
-    storage: _storage = "local",
+    storage = localStorage,
     serializer = JSON,
     onAttach,
     onDetach,
@@ -79,7 +82,6 @@ export const createPersistentStore = <
     return createStore(initialState, defineActions, options);
   }
 
-  const storage = _storage === "local" ? localStorage : sessionStorage;
   const stateKey = `store_${key}`;
   const initialStateKey = `init_${key}`;
   const initialStateSnapshot = storage?.getItem(initialStateKey);
