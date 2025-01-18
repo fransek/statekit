@@ -1,6 +1,9 @@
-import superjson from "superjson";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createPersistentStore } from "./createPersistentStore";
+import {
+  createPersistentStore,
+  Serializer,
+  StorageAPI,
+} from "./createPersistentStore";
 
 describe("createPersistentStore", () => {
   const key = "test";
@@ -56,10 +59,30 @@ describe("createPersistentStore", () => {
   });
 
   it("should use custom serializer", () => {
-    createPersistentStore(key, initialState, null, {
-      serializer: superjson,
+    const customSerializer: Serializer = {
+      stringify: vi.fn(),
+      parse: vi.fn(),
+    };
+    const store = createPersistentStore(key, initialState, null, {
+      serializer: customSerializer,
     });
-    const initState = localStorage.getItem(initKey);
-    expect(initState).toBe(superjson.stringify(initialState));
+    store.set({ count: 1 });
+    expect(customSerializer.stringify).toHaveBeenCalledWith({ count: 1 });
+  });
+
+  it("should use custom storage", () => {
+    const customStorage: StorageAPI = {
+      getItem: vi.fn(),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
+    };
+    const store = createPersistentStore(key, initialState, null, {
+      storage: customStorage,
+    });
+    store.set({ count: 1 });
+    expect(customStorage.setItem).toHaveBeenCalledWith(
+      storeKey,
+      JSON.stringify({ count: 1 }),
+    );
   });
 });
