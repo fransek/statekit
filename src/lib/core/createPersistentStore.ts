@@ -1,18 +1,23 @@
 import { createStore, DefineActions, Store, StoreOptions } from "./createStore";
 
+export type StorageAPI = {
+  getItem: (key: string) => string | null;
+  setItem: (key: string, value: string) => void;
+  removeItem: (key: string) => void;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Serializer<T = any> = {
+  stringify: (value: T) => string;
+  parse: (value: string) => T;
+};
+
 export type PersistentStoreOptions<TState extends object> =
   StoreOptions<TState> & {
     /** The storage to use for persisting the state. Defaults to local storage. */
-    storage?: {
-      getItem: (key: string) => string | null;
-      setItem: (key: string, value: string) => void;
-      removeItem: (key: string) => void;
-    };
+    storage?: StorageAPI | "local" | "session";
     /** The serializer to use for storing the state. Defaults to JSON. */
-    serializer?: {
-      stringify: (value: TState) => string;
-      parse: (value: string) => TState;
-    };
+    serializer?: Serializer<TState>;
   };
 
 /**
@@ -56,7 +61,7 @@ export type PersistentStoreOptions<TState extends object> =
  *   }),
  *   {
  *     serializer: superjson,
- *     storage: sessionStorage,
+ *     storage: "session",
  *   },
  * );
  * ```
@@ -70,7 +75,7 @@ export const createPersistentStore = <
   initialState: TState,
   defineActions: DefineActions<TState, TActions> | null = null,
   {
-    storage = localStorage,
+    storage: _storage = "local",
     serializer = JSON,
     onAttach,
     onDetach,
@@ -82,27 +87,28 @@ export const createPersistentStore = <
     return createStore(initialState, defineActions, options);
   }
 
+  const storage = getStorage(_storage);
   const stateKey = `store_${key}`;
   const initialStateKey = `init_${key}`;
-  const initialStateSnapshot = storage?.getItem(initialStateKey);
+  const initialStateSnapshot = storage.getItem(initialStateKey);
   const initialStateString = serializer.stringify(initialState);
 
   if (initialStateSnapshot !== initialStateString) {
-    storage?.setItem(initialStateKey, initialStateString);
-    storage?.removeItem(stateKey);
+    storage.setItem(initialStateKey, initialStateString);
+    storage.removeItem(stateKey);
   }
 
   const updateSnapshot = (newState: TState) => {
-    const currentSnapshot = storage?.getItem(stateKey);
+    const currentSnapshot = storage.getItem(stateKey);
     const newSnapshot = serializer.stringify(newState);
 
     if (newSnapshot !== currentSnapshot) {
-      storage?.setItem(stateKey, newSnapshot);
+      storage.setItem(stateKey, newSnapshot);
     }
   };
 
   const updateState = () => {
-    const currentSnapshot = storage?.getItem(stateKey);
+    const currentSnapshot = storage.getItem(stateKey);
 
     if (
       currentSnapshot &&
@@ -130,4 +136,15 @@ export const createPersistentStore = <
   });
 
   return store;
+};
+
+const getStorage = (storage: StorageAPI | "local" | "session"): StorageAPI => {
+  switch (storage) {
+    case "local":
+      return localStorage;
+    case "session":
+      return sessionStorage;
+    default:
+      return storage;
+  }
 };
