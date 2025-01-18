@@ -118,8 +118,7 @@ export const createStore = <
         onDetach?.(state, set);
 
         if (resetOnDetach) {
-          state = initialState;
-          dispatch();
+          set(initialState);
         }
       }
     };
