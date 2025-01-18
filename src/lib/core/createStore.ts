@@ -13,8 +13,6 @@ export type Store<TState extends object, TActions extends object> = {
 
 type Listener = () => void;
 
-export type StoreEvent = "attach" | "detach" | "change" | "load";
-
 export type StoreEventHandler<TState extends object> = (
   state: TState,
   set: SetState<TState>,
@@ -23,8 +21,6 @@ export type StoreEventHandler<TState extends object> = (
 export type SetState<TState extends object> = (
   stateModifier: StateModifier<TState>,
 ) => TState;
-
-export type GetState<TState extends object> = () => TState;
 
 export type StateModifier<TState extends object> =
   | Partial<TState>
