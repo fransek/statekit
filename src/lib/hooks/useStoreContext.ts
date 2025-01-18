@@ -7,7 +7,7 @@ import { BoundStore, useStore } from "./useStore";
  *
  * @param {StoreContext<TArgs, TState, TActions>} storeContext - The context of the store.
  * @param {(state: TState) => TSelection} [select] - A function to select a subset of the state. Can prevent unnecessary re-renders.
- * @returns {BoundStore<TState, TActions>} The store instance.
+ * @returns {BoundStore<TState, TActions, TSelection>} The store instance.
  *
  * @example
  * Basic usage:

@@ -28,6 +28,30 @@
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
+    },
+    "./createStore": {
+      "import": "./dist/esm/lib/core/createStore.js",
+      "require": "./dist/cjs/lib/core/createStore.js"
+    },
+    "./createPersistentStore": {
+      "import": "./dist/esm/lib/core/createPersistentStore.js",
+      "require": "./dist/cjs/lib/core/createPersistentStore.js"
+    },
+    "./useStore": {
+      "import": "./dist/esm/lib/hooks/useStore.js",
+      "require": "./dist/cjs/lib/hooks/useStore.js"
+    },
+    "./useStoreContext": {
+      "import": "./dist/esm/lib/hooks/useStoreContext.js",
+      "require": "./dist/cjs/lib/hooks/useStoreContext.js"
+    },
+    "./createStoreContext": {
+      "import": "./dist/esm/lib/utils/createStoreContext.js",
+      "require": "./dist/cjs/lib/utils/createStoreContext.js"
+    },
+    "./merge": {
+      "import": "./dist/esm/lib/utils/merge.js",
+      "require": "./dist/cjs/lib/utils/merge.js"
     }
   },
   "sideEffects": false,

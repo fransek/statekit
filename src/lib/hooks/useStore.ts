@@ -17,7 +17,7 @@ export type BoundStore<
  *
  * @param {Store<TState, TActions, TSelection>} store - The store created with `createStore`.
  * @param {(state: TState) => TSelection} [select] - A function to select a subset of the state. Can prevent unnecessary re-renders.
- * @returns {BoundStore<TState, TSelection>} An object containing the current state, actions, and set function.
+ * @returns {BoundStore<TState, TActions, TSelection>} An object containing the current state, actions, and set function.
  *
  * @example
  * Basic usage:
@@ -63,15 +63,12 @@ export const useStore = <
   { get, set, subscribe, actions }: Store<TState, TActions>,
   select?: (state: TState) => TSelection,
 ): BoundStore<TState, TActions, TSelection> => {
-  const latestSnapshotRef = useRef<TSelection | TState | null>(null);
+  const latestSnapshotRef = useRef<TSelection | null>(null);
 
   const getState = () => {
     if (select) {
       const newState = select(get());
-      if (
-        !latestSnapshotRef.current ||
-        !deeplyEquals(latestSnapshotRef.current, newState)
-      ) {
+      if (!deeplyEquals(latestSnapshotRef.current, newState)) {
         latestSnapshotRef.current = newState;
       }
       return latestSnapshotRef.current;

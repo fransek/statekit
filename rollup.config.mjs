@@ -18,6 +18,7 @@ const createConfig = (format, dir) => ({
         declarationDir: dir,
         emitDeclarationOnly: true,
       },
+      exclude: ["**/*.test.ts", "**/*.test.tsx"],
     }),
   ],
 });

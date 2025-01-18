@@ -13,8 +13,6 @@ export type Store<TState extends object, TActions extends object> = {
 
 type Listener = () => void;
 
-export type StoreEvent = "attach" | "detach" | "change" | "load";
-
 export type StoreEventHandler<TState extends object> = (
   state: TState,
   set: SetState<TState>,
@@ -23,8 +21,6 @@ export type StoreEventHandler<TState extends object> = (
 export type SetState<TState extends object> = (
   stateModifier: StateModifier<TState>,
 ) => TState;
-
-export type GetState<TState extends object> = () => TState;
 
 export type StateModifier<TState extends object> =
   | Partial<TState>
@@ -52,7 +48,7 @@ export type StoreOptions<TState extends object> = {
  * Creates a store with an initial state and actions that can modify the state.
  *
  * @param {TState} initialState - The initial state of the store.
- * @param {DefineActions<TState, TActions> | null} [defineActions=null] - A function that defines actions that can modify the state.
+ * @param {DefineActions<TState, TActions> | null} [defineActions] - A function that defines actions that can modify the state.
  * @param {StoreOptions<TState>} [options] - Additional options for the store.
  *
  * @returns {Store<TState, TActions>} The created store with state management methods.
@@ -118,8 +114,7 @@ export const createStore = <
         onDetach?.(state, set);
 
         if (resetOnDetach) {
-          state = initialState;
-          dispatch();
+          set(initialState);
         }
       }
     };
