@@ -9,13 +9,15 @@ import { useMemo } from "react";
 // Create the store context
 const CounterStoreContext = createStoreContext((initialCount: number) =>
   createStore(
-    { count: initialCount },
+    { count: initialCount, double: initialCount * 2 },
     (set) => ({
       increment: () => set((state) => ({ count: state.count + 1 })),
       decrement: () => set((state) => ({ count: state.count - 1 })),
-      reset: () => set({ count: initialCount }),
     }),
-    { resetOnDetach: true },
+    {
+      onStateChange: (state, set) => set({ double: state.count * 2 }),
+      resetOnDetach: true,
+    },
   ),
 );
 
@@ -27,9 +29,9 @@ export const Counter = ({ initialCount }: { initialCount: number }) => {
   );
   // Use the store
   const {
-    state: { count },
+    state: count,
     actions: { increment, decrement },
-  } = useStore(store);
+  } = useStore(store, (state) => state.count);
 
   return (
     // Provide the store to the context
@@ -39,18 +41,19 @@ export const Counter = ({ initialCount }: { initialCount: number }) => {
         <div aria-label="count">{count}</div>
         <button onClick={increment}>+</button>
       </div>
-      <ResetButton />
+      <DoubleCounter />
     </CounterStoreContext.Provider>
   );
 };
 
-const ResetButton = () => {
+const DoubleCounter = () => {
   // Access the store from the context
-  const {
-    actions: { reset },
-  } = useStoreContext(CounterStoreContext, () => null);
+  const { state: double } = useStoreContext(
+    CounterStoreContext,
+    (state) => state.double,
+  );
 
-  return <button onClick={reset}>Reset</button>;
+  return <div aria-label="double">Double: {double}</div>;
 };
 
 export const Context = () => (
