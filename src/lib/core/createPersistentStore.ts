@@ -70,7 +70,7 @@ export const createPersistentStore = <
   initialState: TState,
   defineActions: DefineActions<TState, TActions> | null = null,
   {
-    storage = localStorage,
+    storage,
     serializer = JSON,
     onAttach,
     onDetach,
@@ -82,27 +82,28 @@ export const createPersistentStore = <
     return createStore(initialState, defineActions, options);
   }
 
+  storage ??= localStorage;
   const stateKey = `store_${key}`;
   const initialStateKey = `init_${key}`;
-  const initialStateSnapshot = storage?.getItem(initialStateKey);
+  const initialStateSnapshot = storage.getItem(initialStateKey);
   const initialStateString = serializer.stringify(initialState);
 
   if (initialStateSnapshot !== initialStateString) {
-    storage?.setItem(initialStateKey, initialStateString);
-    storage?.removeItem(stateKey);
+    storage.setItem(initialStateKey, initialStateString);
+    storage.removeItem(stateKey);
   }
 
   const updateSnapshot = (newState: TState) => {
-    const currentSnapshot = storage?.getItem(stateKey);
+    const currentSnapshot = storage.getItem(stateKey);
     const newSnapshot = serializer.stringify(newState);
 
     if (newSnapshot !== currentSnapshot) {
-      storage?.setItem(stateKey, newSnapshot);
+      storage.setItem(stateKey, newSnapshot);
     }
   };
 
   const updateState = () => {
-    const currentSnapshot = storage?.getItem(stateKey);
+    const currentSnapshot = storage.getItem(stateKey);
 
     if (
       currentSnapshot &&
