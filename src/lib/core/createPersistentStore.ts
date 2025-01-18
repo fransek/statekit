@@ -24,8 +24,8 @@ export type PersistentStoreOptions<TState extends object> =
  *
  * @param {string} key - A unique key to identify the store in storage.
  * @param {TState} initialState - The initial state of the store.
- * @param {DefineActions<TState, TActions> | null} [defineActions=null] - A function to define actions for the store.
- * @param {PersistentStoreOptions<TState>} [options={}] - Additional options for the persistent store.
+ * @param {DefineActions<TState, TActions> | null} [defineActions] - A function to define actions for the store.
+ * @param {PersistentStoreOptions<TState>} [options] - Additional options for the persistent store.
  *
  * @returns {Store<TState, TActions>} The created store.
  *

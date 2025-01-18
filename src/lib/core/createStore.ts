@@ -52,7 +52,7 @@ export type StoreOptions<TState extends object> = {
  * Creates a store with an initial state and actions that can modify the state.
  *
  * @param {TState} initialState - The initial state of the store.
- * @param {DefineActions<TState, TActions> | null} [defineActions=null] - A function that defines actions that can modify the state.
+ * @param {DefineActions<TState, TActions> | null} [defineActions] - A function that defines actions that can modify the state.
  * @param {StoreOptions<TState>} [options] - Additional options for the store.
  *
  * @returns {Store<TState, TActions>} The created store with state management methods.

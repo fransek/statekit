@@ -17,7 +17,7 @@ export type BoundStore<
  *
  * @param {Store<TState, TActions, TSelection>} store - The store created with `createStore`.
  * @param {(state: TState) => TSelection} [select] - A function to select a subset of the state. Can prevent unnecessary re-renders.
- * @returns {BoundStore<TState, TSelection>} An object containing the current state, actions, and set function.
+ * @returns {BoundStore<TState, TActions, TSelection>} An object containing the current state, actions, and set function.
  *
  * @example
  * Basic usage:
