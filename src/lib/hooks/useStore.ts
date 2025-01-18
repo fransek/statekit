@@ -63,15 +63,12 @@ export const useStore = <
   { get, set, subscribe, actions }: Store<TState, TActions>,
   select?: (state: TState) => TSelection,
 ): BoundStore<TState, TActions, TSelection> => {
-  const latestSnapshotRef = useRef<TSelection | TState | null>(null);
+  const latestSnapshotRef = useRef<TSelection | null>(null);
 
   const getState = () => {
     if (select) {
       const newState = select(get());
-      if (
-        !latestSnapshotRef.current ||
-        !deeplyEquals(latestSnapshotRef.current, newState)
-      ) {
+      if (!deeplyEquals(latestSnapshotRef.current, newState)) {
         latestSnapshotRef.current = newState;
       }
       return latestSnapshotRef.current;
