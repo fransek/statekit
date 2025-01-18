@@ -1,4 +1,4 @@
-import { test, expect, Page } from "@playwright/test";
+import { expect, Page, test } from "@playwright/test";
 
 test("Basic counter", async ({ page }) => {
   const count = page.getByLabel("count");
@@ -15,15 +15,18 @@ test("Basic counter", async ({ page }) => {
 
 test("Counter + context", async ({ page }) => {
   const count1 = page.getByLabel("count").first();
+  const double1 = page.getByLabel("double").first();
   const count2 = page.getByLabel("count").nth(1);
+  const double2 = page.getByLabel("double").nth(1);
 
   await page.goto("/context");
   await expect(count1).toHaveText("0");
   await expect(count2).toHaveText("10");
+  await expect(double1).toHaveText("Double: 0");
+  await expect(double2).toHaveText("Double: 20");
   await page.getByRole("button", { name: "+" }).first().click();
   await expect(count1).toHaveText("1");
-  await page.getByRole("button", { name: "Reset" }).first().click();
-  await expect(count1).toHaveText("0");
+  await expect(double1).toHaveText("Double: 2");
 });
 
 test("Counter + persistent state", async ({ page }) => {

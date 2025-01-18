@@ -53,7 +53,7 @@ const DoubleCounter = () => {
     (state) => state.double,
   );
 
-  return <div>Double: {double}</div>;
+  return <div aria-label="double">Double: {double}</div>;
 };
 
 export const Context = () => (
