@@ -1,14 +1,9 @@
-import {
-  Link,
-  Outlet,
-  createRootRoute,
-  useLocation,
-} from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { FileRouteTypes } from "../routeTree.gen";
-import { Nav, navStore } from "../components/Nav";
 import { useStore } from "@fransek/statekit";
+import { Outlet, createRootRoute, useLocation } from "@tanstack/react-router";
+import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { Menu, X } from "lucide-react";
+import { Nav, navStore } from "../components/Nav";
+import { FileRouteTypes } from "../routeTree.gen";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -24,6 +19,7 @@ const routes: {
   { path: "/todo", title: "To do app" },
   { path: "/async", title: "Async actions" },
   { path: "/shared", title: "Shared store" },
+  { path: "/form", title: "Form" },
 ];
 
 function RootComponent() {
