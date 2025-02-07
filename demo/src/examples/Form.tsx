@@ -1,5 +1,4 @@
-import { createForm, createStoreContext, useStore } from "@fransek/statekit";
-import { useRef } from "react";
+import { createForm, useStore } from "@fransek/statekit";
 
 const mandatory = (value: string) => {
   if (!value) {
@@ -13,39 +12,33 @@ const validateEmail = (value: string) => {
   }
 };
 
-const FormStoreContext = createStoreContext(() => {
-  const validateRepeatEmail = (value: string) => {
-    if (value !== form.get().email.value) {
-      return "Emails do not match";
-    }
-  };
+const validateRepeatEmail = (value: string) => {
+  if (value !== form.get().email.value) {
+    return "Emails do not match";
+  }
+};
 
-  const form = createForm({
-    name: {
-      defaultValue: "",
-      validators: [mandatory],
-    },
-    email: {
-      defaultValue: "",
-      validators: [mandatory, validateEmail],
-    },
-    repeatEmail: {
-      defaultValue: "",
-      validators: [mandatory, validateRepeatEmail, validateEmail],
-    },
-  });
-
-  return form;
+const form = createForm({
+  name: {
+    defaultValue: "",
+    validators: [mandatory],
+  },
+  email: {
+    defaultValue: "",
+    validators: [mandatory, validateEmail],
+  },
+  repeatEmail: {
+    defaultValue: "",
+    validators: [mandatory, validateRepeatEmail, validateEmail],
+  },
 });
 
 export const Form = () => {
   // Use the store
-  const store = useRef(FormStoreContext.instantiate()).current;
-
   const {
     state,
     actions: { setValue, onBlur, validate },
-  } = useStore(store);
+  } = useStore(form);
 
   const register = (key: keyof typeof state) =>
     ({
