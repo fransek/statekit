@@ -18,6 +18,27 @@ const validateRepeatEmail = (value: string) => {
   }
 };
 
+const genderOptions = [
+  {
+    label: "Select",
+    value: "",
+  },
+  {
+    label: "Male",
+    value: "m",
+  },
+  {
+    label: "Female",
+    value: "f",
+  },
+  {
+    label: "Other",
+    value: "o",
+  },
+] as const;
+
+type Gender = (typeof genderOptions)[number]["value"];
+
 const form = createForm({
   name: {
     defaultValue: "",
@@ -30,6 +51,10 @@ const form = createForm({
   repeatEmail: {
     defaultValue: "",
     validators: [mandatory, validateRepeatEmail, validateEmail],
+  },
+  gender: {
+    defaultValue: "" as Gender,
+    validators: [mandatory],
   },
 });
 
@@ -74,6 +99,15 @@ export const Form = () => {
         onChange={(e) => setValue("repeatEmail", e.target.value)}
         onBlur={onBlur("repeatEmail")}
       />
+      <Select
+        label="Gender"
+        id="gender"
+        value={state.gender.value}
+        error={state.gender.error}
+        onChange={(e) => setValue("gender", e.target.value as Gender)}
+        onBlur={onBlur("gender")}
+        options={genderOptions}
+      />
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -98,6 +132,30 @@ const Input = ({ label, error, ...props }: InputProps) => (
   <div className="flex flex-col gap-2">
     {label && <label>{label}</label>}
     <input {...props} />
+    {error && (
+      <p className="text-red-500" aria-live="polite">
+        {error}
+      </p>
+    )}
+  </div>
+);
+
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  label?: string;
+  error?: string;
+  options: readonly { label: string; value: string }[];
+}
+
+const Select = ({ label, error, options, ...props }: SelectProps) => (
+  <div className="flex flex-col gap-2">
+    {label && <label>{label}</label>}
+    <select className="h-8 rounded" {...props}>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
     {error && (
       <p className="text-red-500" aria-live="polite">
         {error}

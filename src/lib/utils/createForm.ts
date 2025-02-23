@@ -5,7 +5,7 @@ export type Validator<T> = (value: T) => string | undefined;
 
 export type FieldControl<T> = {
   defaultValue: T;
-  validators: Validator<T>[];
+  validators?: Validator<T>[];
 };
 
 export type FieldState<T> = {
@@ -162,7 +162,9 @@ export const createForm = <T extends Form<T>>(fields: T) => {
   return { initialState, defineActions };
 };
 
-const validateInput = <T>(value: T, validators: Validator<T>[]) => {
+const validateInput = <T>(value: T, validators?: Validator<T>[]) => {
+  if (!validators) return undefined;
+
   for (const validator of validators) {
     const error = validator(value);
     if (error) {
