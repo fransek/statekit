@@ -1,4 +1,4 @@
-import { createForm, useStore } from "@fransek/statekit";
+import { createForm, createStore, useStore } from "@fransek/statekit";
 
 const mandatory = (value: string) => {
   if (!value) {
@@ -13,7 +13,7 @@ const validateEmail = (value: string) => {
 };
 
 const validateRepeatEmail = (value: string) => {
-  if (value !== form.get().email.value) {
+  if (value !== store.get().email.value) {
     return "Emails do not match";
   }
 };
@@ -33,27 +33,47 @@ const form = createForm({
   },
 });
 
+const store = createStore(
+  {
+    ...form.initialState,
+  },
+  (set, get) => ({
+    ...form.defineActions(set, get),
+  }),
+);
+
 export const Form = () => {
-  // Use the store
   const {
     state,
     actions: { setValue, onBlur, validate },
-  } = useStore(form);
-
-  const register = (key: keyof typeof state) =>
-    ({
-      id: key,
-      value: state[key].value,
-      onChange: (e) => setValue(key, e.target.value),
-      onBlur: onBlur(key),
-      error: state[key].error,
-    }) satisfies Partial<InputProps>;
+  } = useStore(store);
 
   return (
-    <form className="flex flex-col gap-2">
-      <Input label="Name" {...register("name")} />
-      <Input label="Email" {...register("email")} />
-      <Input label="Repeat Email" {...register("repeatEmail")} />
+    <div className="flex flex-col gap-2">
+      <Input
+        label="Name"
+        id="name"
+        value={state.name.value}
+        error={state.name.error}
+        onChange={(e) => setValue("name", e.target.value)}
+        onBlur={onBlur("name")}
+      />
+      <Input
+        label="Email"
+        id="email"
+        value={state.email.value}
+        error={state.email.error}
+        onChange={(e) => setValue("email", e.target.value)}
+        onBlur={onBlur("email")}
+      />
+      <Input
+        label="Repeat Email"
+        id="repeatEmail"
+        value={state.repeatEmail.value}
+        error={state.repeatEmail.error}
+        onChange={(e) => setValue("repeatEmail", e.target.value)}
+        onBlur={onBlur("repeatEmail")}
+      />
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -65,23 +85,19 @@ export const Form = () => {
       >
         Submit
       </button>
-    </form>
+    </div>
   );
 };
 
-interface InputProps {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur: () => void;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
   error?: string;
 }
 
-const Input = ({ id, label, value, onChange, onBlur, error }: InputProps) => (
+const Input = ({ label, error, ...props }: InputProps) => (
   <div className="flex flex-col gap-2">
-    <label>{label}</label>
-    <input value={value} onChange={onChange} onBlur={onBlur} id={id} />
+    {label && <label>{label}</label>}
+    <input {...props} />
     {error && (
       <p className="text-red-500" aria-live="polite">
         {error}

@@ -1,5 +1,4 @@
- 
-import { createStore, StateModifier } from "../core/createStore";
+import { createStore, DefineActions, StateModifier } from "../core/createStore";
 import { merge } from "./merge";
 
 export type Validator<T> = (value: T) => string | undefined;
@@ -23,6 +22,21 @@ export type FormState<T extends Form<T>> = {
   [K in keyof T]: FieldState<T[K]["defaultValue"]>;
 };
 
+export type FormActions<T extends Form<T>> = {
+  setValue: <K extends keyof T>(key: K, value: T[K]["defaultValue"]) => void;
+  setValues: (
+    values: Partial<Record<keyof T, T[keyof T]["defaultValue"]>>,
+  ) => void;
+  onBlur: <K extends keyof T>(key: K) => () => void;
+  validate: (autoFocus?: boolean) => {
+    validatedForm: FormState<T>;
+    firstError: HTMLElement | null;
+    isValid: boolean;
+  };
+  validateField: <K extends keyof T>(key: K) => void;
+  reset: () => void;
+};
+
 export const createForm = <T extends Form<T>>(fields: T) => {
   const initialState = Object.keys(fields).reduce((acc, key) => {
     acc[key as keyof T] = {
@@ -33,7 +47,10 @@ export const createForm = <T extends Form<T>>(fields: T) => {
     return acc;
   }, {} as FormState<T>);
 
-  return createStore(initialState, (set, get) => {
+  const defineActions: DefineActions<FormState<T>, FormActions<T>> = (
+    set,
+    get,
+  ) => {
     const setField = <K extends keyof T>(
       key: K,
       field: StateModifier<FormState<T>[K]>,
@@ -140,7 +157,9 @@ export const createForm = <T extends Form<T>>(fields: T) => {
       validateField,
       reset,
     };
-  });
+  };
+
+  return { initialState, defineActions };
 };
 
 const validateInput = <T>(value: T, validators: Validator<T>[]) => {
@@ -163,3 +182,7 @@ const getFirstElement = (elements: HTMLElement[]): HTMLElement | null => {
       : first,
   );
 };
+
+export const createFormStore = <T extends Form<T>>(
+  form: ReturnType<typeof createForm>,
+) => createStore(form.initialState, form.defineActions);
